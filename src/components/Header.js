@@ -22,6 +22,7 @@ import { useVoice } from "../utils/useVoice";
 import { changeCategory } from "../utils/categorySlice";
 
 import mic_open from "../assests/mic_open.gif";
+import DropDownList from "./DropDownList";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -101,33 +102,18 @@ const Header = () => {
     // eslint-disable-next-line
   }, [debounceSearchText]);
 
-  const stateValue = {
-    id: 23,
-    attributes: {
-      name: "Tamil Nadu",
-      locale: "en"
-    }
-  };
-  const [selectedValue, setSelectedValue] = useState(stateValue);
 
   const [stateData, setStateData] = useState([]);
 
   const stateApiHandler = async () => {
-    if (!stateData || stateData?.length === 0) {
       const response = await fetch(`${BASE_URL}/states`);
       const { data } = await response.json();
       setStateData(data);
-    }
   }
 
   useEffect(() => {
     stateApiHandler();
   }, []);
-
-  const stateHandler = (data) => {
-    setSelectedValue(data);
-    // dispatch(changeCategory({ type: 'DISTRICT', value: data.id }));
-  }
 
 
   return (
@@ -157,52 +143,7 @@ const Header = () => {
             />
           </a>
         </div>
-        <div className="dropdown-menu">
-          <Link
-            replace
-            state={{ type: 'STATE', value: selectedValue?.id, item: selectedValue }}
-            to={{
-              pathname: `/${selectedValue?.attributes?.name}`,
-              state: selectedValue,
-            }}
-          >
-            <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-id={stateValue?.id} data-dropdown-trigger="hover"
-              class="text-black bg-white-700 hover:bg-white-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-white-600 dark:hover:bg-white-700" type="button">
-              {selectedValue?.attributes?.name}
-              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-              </svg>
-            </button>
-          </Link>
-
-          {
-            stateData?.length > 0 && (
-              <div
-                class="dropdown-submenu absolute z-10 w-screen lg:max-w-xl overflow-hidden rounded bg-white shadow-lg ring-1 ring-gray-900/5">
-                <div class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-                  {
-                    stateData.map((item) => (
-                      <Link
-                        state={{ type: 'STATE', value: item.id, item: item }}
-                        to={{
-                          pathname: `/${item.attributes.name}`,
-                          state: item,
-                        }}
-                      >
-                        <div key={item.id} class="flex-auto p-2" data-id={item.id} onClick={() => stateHandler(item)}>
-                          <span class="block text-gray-900">
-                            {item.attributes.name}
-                            <span class="inset-0"></span>
-                          </span>
-                        </div>
-                      </Link>
-                    ))
-                  }
-                </div>
-              </div>
-            )
-          }
-        </div>
+        <DropDownList dataSource={stateData} />
       </div>
       <div className="center w-3/5 2xl:w-2/5 max-sm:w-4/5 max-sm:ml-2 max-sm:mr-4 flex items-center ml-16 relative ">
         <div

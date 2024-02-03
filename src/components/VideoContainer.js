@@ -59,7 +59,7 @@ const VideoContainer = () => {
     useInfiniteQuery(
       ["home-videos", category, state, district, taluk, newsCategory],
       ({ pageParam = null }) =>
-        (category?.value === "All" || state || district || taluk || newsCategory)
+        (category?.type !== "SEARCH" && (state || district || taluk || newsCategory))
           ? getVideos(pageParam)
           : searchVideoByKeyword(category, pageParam),
       {
@@ -99,23 +99,10 @@ const VideoContainer = () => {
     try {
       let apiUrl;
       nextPageToken = nextPageToken || 0;
-      const stateId = 23;
       switch(category?.type) {
         case 'SEARCH':
-          apiUrl = `${BASE_URL}/headlines?populate=*&sort=publishedAt:desc&filters[title][$containsi][0]=${category.value}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
+          apiUrl = `${BASE_URL}/headlines?populate=*&sort=publishedAt:desc&filters[state][name][$contains][0]=${state}&filters[title][$containsi][0]=${category.value}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
           break;
-        case 'CATEGORY':
-          apiUrl = `${BASE_URL}/headlines?populate=*&sort=publishedAt:desc&filters[news_category][[id]][$eq][0]=${category.value}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
-          break;
-        case 'TAG':
-          apiUrl = `${BASE_URL}/headlines?populate=*&sort=publishedAt:desc&filters[title][$containsi][0]=${category.value}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
-          break;
-        case 'DISTRICT':
-          apiUrl = `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[state][name][$contains][0]=${state}&filters[district][name][$contains][0]=${district}&filters[taluk][name][$contains][0]=${taluk}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`
-          break;
-        case 'STATE':
-          apiUrl = `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[state][name][$contains][0]=${state}&filters[district][name][$contains][0]=${district}&filters[taluk][name][$contains][0]=${taluk}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`
-         break;
          default :
           apiUrl = `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[state][name][$contains][0]=${state}&filters[district][name][$contains][0]=${district}&filters[taluk][name][$contains][0]=${taluk}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`
          break;

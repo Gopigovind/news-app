@@ -70,15 +70,6 @@
   }
 }
 
-.dropdown-submenu {
-  display: none;
-  
-}
-
-.dropdown-menu:hover .dropdown-submenu {
-  display: block;
-}
-
 
 .swiper {
   width: 100%;
