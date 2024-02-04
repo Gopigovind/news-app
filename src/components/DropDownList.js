@@ -11,7 +11,8 @@ const DropDownList = ({dataSource}) => {
 
   useEffect(() => {
     if (dataSource?.length > 0) {
-        const defaultItem = dataSource.filter(item => item.id === 23)[0];
+        const defaultItem = dataSource.filter(item => item.attributes.name === 'Tamil Nadu' || 'தமிழ் நாடு')[0];
+        localStorage.setItem('stateValue', defaultItem?.attributes.name);
         setSelected(defaultItem);
     }
   }, [dataSource]);

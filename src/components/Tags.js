@@ -10,13 +10,18 @@ import { changeCategory } from "../utils/categorySlice";
 const Tags = () => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
   const [active, setActive] = useState('All');
-  let { state = 'Tamil Nadu', district = '', taluk = '', newsCategory = '' } = useParams();
+  let { state = localStorage.getItem('stateValue'), district = '', taluk = '', newsCategory = '' } = useParams();
   newsCategory = newsCategory === state ? '' : newsCategory;
   const handleSetHomeVideoByKeyword = (tag) => {
     if (active !== tag) {
       setActive(tag);
     }
   };
+
+  state = decodeURIComponent(state);
+  district = decodeURIComponent(district);
+  taluk = decodeURIComponent(taluk);
+  newsCategory = decodeURIComponent(newsCategory);
 
   const [tags, setTags] = useState({ path: '', items: [] });
   const districtHandler = async (state) => {

@@ -122,7 +122,7 @@ const Header = () => {
         <button
           className=" p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700"
           onClick={
-            route.pathname === "/watch"
+            route.pathname.includes('/news')
               ? toggleSideBarHandler
               : toggleMenuHandler
           }

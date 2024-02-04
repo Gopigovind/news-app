@@ -14,9 +14,17 @@ const VideoContainer = () => {
   const category = useSelector((store) => store.newsCategory.category);
   const dispatch = useDispatch();
   const location = useLocation();
-  let {state='Tamil Nadu', district='', taluk='', newsCategory=''} = useParams();
+  let {state= localStorage.getItem('stateValue'), district='', taluk='', newsCategory=''} = useParams();
+  
+
   let date = new Date();
   newsCategory = newsCategory === state ? '' : newsCategory;
+  
+  state = decodeURIComponent(state);
+  district = decodeURIComponent(district);
+  taluk = decodeURIComponent(taluk);
+  newsCategory = decodeURIComponent(newsCategory);
+
   // eslint-disable-next-line
   date = encodeURIComponent(date.toJSON());
   let publishedAfter = new Date(Date.now() - 150 * 24 * 60 * 60 * 1000);
@@ -123,7 +131,7 @@ const VideoContainer = () => {
   
 useEffect(() => {
   if (state || district || taluk) {
-    dispatch(changeCategory({ type: location.pathname, value: location.pathname }));
+    dispatch(changeCategory({ type: decodeURIComponent(location.pathname), value: decodeURIComponent(location.pathname) }));
     const statePath = state ? `/${state}` : '';
     const districtPath = district ? `/${district}` : '';
     const talukpath = taluk ? `/${taluk}` : '';

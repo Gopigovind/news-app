@@ -6,7 +6,7 @@ const BreadCrum = () => {
     const location = useLocation();
 
     const pathList = () => {
-        const pathItem = location.pathname.split('/').filter(item => item && (item !== 'news'));
+        const pathItem = decodeURIComponent(location.pathname)?.split('/').filter(item => item && (item !== 'news'));
         return pathItem;
     }
     const textEllipse = {
