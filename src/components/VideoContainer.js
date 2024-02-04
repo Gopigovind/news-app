@@ -53,8 +53,9 @@ const VideoContainer = () => {
   const getVideos = async (nextPageToken = 0) => {
     try {
       nextPageToken = nextPageToken || 0;
-      const pathUrl = newsCategory ? `${BASE_URL}/headlines?populate=*&sort=publishedAt:desc&filters[news_category][[name]][$contains][0]=${newsCategory}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}` 
-      : `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[state][name][$contains][0]=${state}&filters[district][name][$contains][0]=${district}&filters[taluk][name][$contains][0]=${taluk}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
+      const paginationUrl = `&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
+      const pathUrl = newsCategory ? `${BASE_URL}/headlines?populate=*&sort=publishedAt:desc&filters[locale][$contains][0]=ta&filters[news_category][[name]][$contains][0]=${newsCategory}${paginationUrl}` 
+      : location.pathname === '/' ? `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[locale][$contains][0]=ta${paginationUrl}` : `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[locale][$contains][0]=ta&filters[state][name][$contains][0]=${state}&filters[district][name][$contains][0]=${district}&filters[taluk][name][$contains][0]=${taluk}${paginationUrl}`;
       const response = await fetch(pathUrl);
       const data = await response.json();
       return data;
@@ -65,9 +66,9 @@ const VideoContainer = () => {
 
   let { data, isLoading, fetchNextPage, isFetchingNextPage, isSuccess } =
     useInfiniteQuery(
-      ["home-videos", category, state, district, taluk, newsCategory],
+      ["home-videos", category, state, district, taluk, newsCategory, location.pathname],
       ({ pageParam = null }) =>
-        (category?.type !== "SEARCH" && (state || district || taluk || newsCategory))
+        (category?.type !== "SEARCH" && (state || district || taluk || newsCategory || location.pathname))
           ? getVideos(pageParam)
           : searchVideoByKeyword(category, pageParam),
       {
