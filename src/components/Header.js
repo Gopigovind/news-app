@@ -117,7 +117,7 @@ const Header = () => {
 
 
   return (
-    <div className="px-4 py-2 flex justify-between items-center shadow-sm  w-full sticky top-0 z-10 bg-white h-[4.62rem] dark:bg-zinc-900 dark:text-white transition-all duration-500">
+    <div className="px-4 py-2 flex justify-between items-center shadow-sm  w-full sticky top-0 z-10 bg-white h-[4.62rem] dark:bg-zinc-900 dark:text-white transition-all duration-500" style={{overflowX: 'auto', height: 'auto'}}>
       <div className="left-items flex items-center">
         <button
           className=" p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700"
