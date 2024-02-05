@@ -95,3 +95,8 @@
 .swiper .swiper-pagination-bullet-active {
   background: #fff;
 }
+
+.article-card iframe {
+  width: auto;
+  height: auto;
+}

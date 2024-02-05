@@ -142,7 +142,7 @@ const VideoCard = ({ article }) => {
               )
             }
           </>
-        ) : articleCard.videoUrl?.url && (<div dangerouslySetInnerHTML={{ __html: articleCard.videoUrl?.url }}></div>)
+        ) : articleCard.videoUrl?.url && (<div className="article-card" dangerouslySetInnerHTML={{ __html: articleCard.videoUrl?.url }}></div>)
       }
       <div className="flex-1 flex flex-col">
         <div className="flex-1 flex flex-col p-5">
