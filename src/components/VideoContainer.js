@@ -73,7 +73,7 @@ const VideoContainer = () => {
           : searchVideoByKeyword(category, pageParam),
       {
         getNextPageParam: (lastPage, pages) => {
-          if (lastPage?.meta?.pagination?.limit <= lastPage?.meta?.pagination?.total) {
+          if ((lastPage?.meta?.pagination?.limit + 1) < lastPage?.meta?.pagination?.total) {
             return lastPage?.meta?.pagination?.limit;
           } else {
             onScreen = false;

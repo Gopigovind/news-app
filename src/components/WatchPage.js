@@ -65,7 +65,7 @@ const MediaElement = ({ articleCard }) => {
               )
             }
           </>
-        ) : null
+        ) : articleCard.videoUrl?.url && (<div dangerouslySetInnerHTML={{ __html: articleCard.videoUrl?.url }}></div>)
       }
     </>
   )
