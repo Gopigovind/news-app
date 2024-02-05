@@ -24,6 +24,49 @@ import { changeCategory } from "../utils/categorySlice";
 import mic_open from "../assests/mic_open.gif";
 import DropDownList from "./DropDownList";
 
+export const RightSideComp = () => {
+
+  const { theme, setTheme } = useContext(ThemeContext);
+
+  const handleThemeChange = () => {
+    const isCurrentDark = theme === "dark";
+    setTheme(isCurrentDark ? "light" : "dark");
+    localStorage.setItem("theme", isCurrentDark ? "light" : "dark");
+  };
+
+  return (
+    <div className="right-menu flex  items-center sm:ml-4 lg:ml-16 gap-5 p-2">
+      <div className="toggle-dark-mode-switch  flex items-center gap-2">
+        <label
+          htmlFor="check"
+          className="bg-gray-100 dark:bg-zinc-700 relative top-0 w-20 h-8 rounded-full cursor-pointer flex items-center justify-around dark:text-black"
+        >
+          {" "}
+          <BsFillSunFill className="text-amber-400" size="1.2rem" />
+          <BsFillMoonFill className="text-zinc-700" size="1.2rem" />
+          <input
+            type="checkbox"
+            id="check"
+            className="sr-only peer"
+            checked={theme === "dark"}
+            onChange={handleThemeChange}
+          />
+          <span className="w-2/5 h-4/5 bg-amber-400 absolute rounded-full left-1 top-1 peer-checked:bg-white peer-checked:left-11 transition-all duration-500 "></span>
+        </label>
+      </div>
+
+      <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
+        <RiVideoAddLine size="1.5rem" />
+      </div>
+      <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
+        <IoMdNotificationsOutline size="1.5rem" />
+      </div>
+      <div className="p-2 max-sm:hidden   hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
+        <FaUserCircle size="1.5rem" />
+      </div>
+    </div>
+  )
+}
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const debounceSearchText = useDebounce(searchQuery, 200);
@@ -33,14 +76,6 @@ const Header = () => {
   const inputRef = useRef();
 
   const { text, isListening, listen } = useVoice();
-
-  const { theme, setTheme } = useContext(ThemeContext);
-
-  const handleThemeChange = () => {
-    const isCurrentDark = theme === "dark";
-    setTheme(isCurrentDark ? "light" : "dark");
-    localStorage.setItem("theme", isCurrentDark ? "light" : "dark");
-  };
 
   const searchCache = useSelector((store) => store.search.suggestions);
   const dispatch = useDispatch();
@@ -102,13 +137,14 @@ const Header = () => {
     // eslint-disable-next-line
   }, [debounceSearchText]);
 
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const [stateData, setStateData] = useState([]);
 
   const stateApiHandler = async () => {
-      const response = await fetch(`${BASE_URL}/states`);
-      const { data } = await response.json();
-      setStateData(data);
+    const response = await fetch(`${BASE_URL}/states`);
+    const { data } = await response.json();
+    setStateData(data);
   }
 
   useEffect(() => {
@@ -117,7 +153,7 @@ const Header = () => {
 
 
   return (
-    <div className="px-4 py-2 flex justify-between items-center shadow-sm  w-full sticky top-0 z-10 bg-white h-[4.62rem] dark:bg-zinc-900 dark:text-white transition-all duration-500" style={{overflowX: 'auto', height: 'auto'}}>
+    <div className="px-4 py-2 flex justify-between items-center shadow-sm  w-full sticky top-0 z-10 bg-white h-[4.62rem] dark:bg-zinc-900 dark:text-white transition-all duration-500" style={{flexDirection: isMobile ? 'column' : 'row', height: '100%'}}>
       <div className="left-items flex items-center">
         <button
           className=" p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700"
@@ -144,11 +180,14 @@ const Header = () => {
           </a>
         </div>
         <DropDownList dataSource={stateData} />
+        {isMobile &&
+          <RightSideComp />
+        }
       </div>
-      <div className="center w-3/5 2xl:w-2/5 max-sm:w-4/5 max-sm:ml-2 max-sm:mr-4 flex items-center ml-16 relative ">
+      <div className="center w-3/5 2xl:w-2/5 max-sm:w-4/5 max-sm:ml-2 max-sm:mr-4 flex items-center ml-16 relative " style={{width: isMobile ? 'auto': ''}}>
         <div
           ref={searchRef}
-          className="searchbar  dark:bg-zinc-800 flex-1 flex items-center ml-10 rounded-3xl border-2 dark:border dark:border-gray-500"
+          className={`searchbar  dark:bg-zinc-800 flex-1 flex items-center ${isMobile ? 'ml-0': 'ml-10'} rounded-3xl border-2 dark:border dark:border-gray-500`}
         >
           <input
             ref={inputRef}
@@ -204,36 +243,9 @@ const Header = () => {
           />
         )} */}
       </div>
-      <div className="right-menu flex  items-center sm:ml-4 lg:ml-16 gap-5 p-2">
-        <div className="toggle-dark-mode-switch  flex items-center gap-2">
-          <label
-            htmlFor="check"
-            className="bg-gray-100 dark:bg-zinc-700 relative top-0 w-20 h-8 rounded-full cursor-pointer flex items-center justify-around dark:text-black"
-          >
-            {" "}
-            <BsFillSunFill className="text-amber-400" size="1.2rem" />
-            <BsFillMoonFill className="text-zinc-700" size="1.2rem" />
-            <input
-              type="checkbox"
-              id="check"
-              className="sr-only peer"
-              checked={theme === "dark"}
-              onChange={handleThemeChange}
-            />
-            <span className="w-2/5 h-4/5 bg-amber-400 absolute rounded-full left-1 top-1 peer-checked:bg-white peer-checked:left-11 transition-all duration-500 "></span>
-          </label>
-        </div>
-
-        <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
-          <RiVideoAddLine size="1.5rem" />
-        </div>
-        <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
-          <IoMdNotificationsOutline size="1.5rem" />
-        </div>
-        <div className="p-2 max-sm:hidden   hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
-          <FaUserCircle size="1.5rem" />
-        </div>
-      </div>
+      {!isMobile &&
+        <RightSideComp />
+      }
     </div>
   );
 };
