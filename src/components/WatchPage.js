@@ -12,6 +12,8 @@ import VideoSuggestions from "./VideoSuggestions";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../utils/appSlice";
 import { isMobile } from "../utils/helper";
+import BreadCrum from "./BreadCrum";
+import SideBar from './SideBar';
 import { useQuery } from "@tanstack/react-query";
 import news_default from "../assests/news-default.png";
 
@@ -66,7 +68,7 @@ const MediaElement = ({ articleCard }) => {
               )
             }
           </>
-        ) : articleCard.videoUrl?.url && (<div dangerouslySetInnerHTML={{ __html: articleCard.videoUrl?.url }}></div>)
+        ) : articleCard.videoUrl?.url && (<div className={`${isMobile ? 'flex' : ''}`} dangerouslySetInnerHTML={{ __html: articleCard.videoUrl?.url }}></div>)
       }
     </>
   )
@@ -139,6 +141,9 @@ const WatchPage = () => {
 
 
   return (isLoading || !articleCard) ? null : (
+    <>
+    {isMobile && <><SideBar /><BreadCrum /></>}
+    
   <div className="max-w-6xl mx-auto">
   <article>
       <section className={`flex flex-col lg:flex-row pb-24 py-4 px-${isMobile ? 2 : 0} lg:px-10 dark:bg-zinc-900 dark:text-white`}>
@@ -157,6 +162,7 @@ const WatchPage = () => {
       </section>
     </article>
   </div>
+  </>
   );
 };
 
