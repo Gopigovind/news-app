@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, Link, useParams } from 'react-router-dom';
+import { BsHouseDownFill } from "react-icons/bs";
 
 const BreadCrum = () => {
 
@@ -23,7 +24,9 @@ const BreadCrum = () => {
                         <ol role="list" class="flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8 py-4">
                             <li>
                                 <div class="flex items-center">
-                                    <Link to="/" class="font-semibold text-sm text-slate-500 hover:text-slate-600 sm:block">Home</Link>
+                                    <Link to="/" class="font-semibold text-sm text-slate-500 hover:text-slate-600 sm:block">
+                                    <BsHouseDownFill className="text-zinc-700" size="1.2rem" />
+                                    </Link>
                                     <div aria-hidden="true" class="font-semibold mx-2 select-none text-slate-400 sm:block">/</div>
                                 </div>
                             </li>

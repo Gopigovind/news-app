@@ -11,6 +11,7 @@ import Comments from "./Comments";
 import VideoSuggestions from "./VideoSuggestions";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../utils/appSlice";
+import { isMobile } from "../utils/helper";
 import { useQuery } from "@tanstack/react-query";
 import news_default from "../assests/news-default.png";
 
@@ -140,9 +141,9 @@ const WatchPage = () => {
   return (isLoading || !articleCard) ? null : (
   <div className="max-w-6xl mx-auto">
   <article>
-      <section className="flex flex-col lg:flex-row pb-24 py-4 px-0 lg:px-10 dark:bg-zinc-900 dark:text-white">
+      <section className={`flex flex-col lg:flex-row pb-24 py-4 px-${isMobile ? 2 : 0} lg:px-10 dark:bg-zinc-900 dark:text-white`}>
         <MediaElement articleCard={articleCard} />
-        <div className="px-10 w-full">
+        <div className={`${isMobile ? 'px-2 py-2' : 'px-10'} w-full`}>
           <h1 className="font-bold headerTitle px-0 no-underline pb-2">
             {articleCard.title}
           </h1>

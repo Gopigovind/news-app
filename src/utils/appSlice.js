@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { isMobile } from './helper';
 
 const appSlice = createSlice({
   name: 'app',
   initialState: {
-    isMenuOpen: true,
+    isMenuOpen: !isMobile,
     isSideBarOpen: false,
   },
   reducers: {

@@ -20,6 +20,7 @@ import ThemeContext from "../utils/ThemeContext";
 import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { useVoice } from "../utils/useVoice";
 import { changeCategory } from "../utils/categorySlice";
+import { isMobile } from '../utils/helper'
 
 import mic_open from "../assests/mic_open.gif";
 import DropDownList from "./DropDownList";
@@ -66,7 +67,55 @@ export const RightSideComp = () => {
       </div>
     </div>
   )
-}
+};
+
+const LeftMenu = () => {
+
+  const dispatch = useDispatch();
+  const toggleMenuHandler = () => {
+    dispatch(toggleMenu());
+  };
+
+
+  const [stateData, setStateData] = useState([]);
+
+  const stateApiHandler = async () => {
+    const response = await fetch(`${BASE_URL}/states`);
+    const { data } = await response.json();
+    setStateData(data);
+  }
+
+  useEffect(() => {
+    stateApiHandler();
+  }, []);
+
+  return (
+    <>
+      <button
+        className=" p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700"
+        onClick={toggleMenuHandler}
+      >
+        <RxHamburgerMenu
+          size="1.5rem"
+          title="hambergur menu"
+          className="cursor-pointer"
+        />
+      </button>
+      <div className="logo cursor-pointer flex items-center max-md:hidden">
+        <a href="/">
+          <img
+            src={logo}
+            alt="logo"
+            title="logo"
+            className="w-20 pl-4"
+          />
+        </a>
+      </div>
+      <DropDownList dataSource={stateData} />
+    </>
+  )
+};
+
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const debounceSearchText = useDebounce(searchQuery, 200);
@@ -93,9 +142,6 @@ const Header = () => {
     setSearchQuery("");
   };
 
-  const toggleMenuHandler = () => {
-    dispatch(toggleMenu());
-  };
   const toggleSideBarHandler = () => {
     dispatch(toggleSideBar());
   };
@@ -137,57 +183,26 @@ const Header = () => {
     // eslint-disable-next-line
   }, [debounceSearchText]);
 
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-  const [stateData, setStateData] = useState([]);
-
-  const stateApiHandler = async () => {
-    const response = await fetch(`${BASE_URL}/states`);
-    const { data } = await response.json();
-    setStateData(data);
-  }
-
-  useEffect(() => {
-    stateApiHandler();
-  }, []);
-
-
   return (
-    <div className="px-4 py-2 flex justify-between items-center shadow-sm  w-full sticky top-0 z-10 bg-white h-[4.62rem] dark:bg-zinc-900 dark:text-white transition-all duration-500" style={{flexDirection: isMobile ? 'column' : 'row', height: '100%'}}>
-      <div className="left-items flex items-center">
-        <button
-          className=" p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700"
-          onClick={
-            route.pathname.includes('/news')
-              ? toggleSideBarHandler
-              : toggleMenuHandler
-          }
-        >
-          <RxHamburgerMenu
-            size="1.5rem"
-            title="hambergur menu"
-            className="cursor-pointer"
-          />
-        </button>
-        <div className="logo cursor-pointer flex items-center max-md:hidden">
-          <a href="/">
-            <img
-              src={logo}
-              alt="logo"
-              title="logo"
-              className="w-20 pl-4"
-            />
-          </a>
-        </div>
-        <DropDownList dataSource={stateData} />
+    <div className={`px-${isMobile ? 2 : 4} py-2 flex justify-between ${!isMobile ? 'items-center' : ''} shadow-sm  w-full sticky top-0 z-10 bg-white h-[4.62rem] dark:bg-zinc-900 dark:text-white transition-all duration-500`} style={{ flexDirection: isMobile ? 'column' : 'row', height: '100%' }}>
+      <div className={`left-items flex items-center ${isMobile ? 'justify-between' : ''}`}>
+        {
+          isMobile ? (
+            <div className="flex">
+              <LeftMenu />
+            </div>
+          ) : (
+            <LeftMenu />
+          )
+        }
         {isMobile &&
           <RightSideComp />
         }
       </div>
-      <div className="center w-3/5 2xl:w-2/5 max-sm:w-4/5 max-sm:ml-2 max-sm:mr-4 flex items-center ml-16 relative " style={{width: isMobile ? 'auto': ''}}>
+      <div className={`center w-3/5 2xl:w-2/5 max-sm:w-4/5 flex items-center ${!isMobile ? 'ml-16' : ''} relative`} style={{ width: isMobile ? 'auto' : '' }}>
         <div
           ref={searchRef}
-          className={`searchbar  dark:bg-zinc-800 flex-1 flex items-center ${isMobile ? 'ml-0': 'ml-10'} rounded-3xl border-2 dark:border dark:border-gray-500`}
+          className={`searchbar  dark:bg-zinc-800 flex-1 flex items-center ${isMobile ? 'ml-0' : 'ml-10'} rounded-3xl border-2 dark:border dark:border-gray-500`}
         >
           <input
             ref={inputRef}

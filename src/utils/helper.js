@@ -63,3 +63,6 @@ export const stringToHTML = function (str) {
   var doc = parser.parseFromString(str, 'text/html');
   return doc.body;
 };
+
+
+export const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

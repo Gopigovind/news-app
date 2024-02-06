@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ThemeContext from "./utils/ThemeContext";
 import { useEffect, useState } from "react";
+import { isMobile } from "./utils/helper";
 
 /* 
   Header
@@ -147,7 +148,7 @@ function App() {
         <ThemeContext.Provider value={{ theme, setTheme }}>
           <div className="font-Roboto">
             <Header />
-            <BreadCrum />
+            {!isMobile && <BreadCrum />}
             <Outlet />
           </div>
           {/* <ReactQueryDevtools initialIsOpen /> */}

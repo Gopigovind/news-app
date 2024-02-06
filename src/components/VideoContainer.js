@@ -9,6 +9,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import useIntersectionObserver from "./../utils/useIntersectionObserver";
 import { changeCategory } from "../utils/categorySlice";
+import { isMobile } from '../utils/helper';
 
 const VideoContainer = () => {
   const category = useSelector((store) => store.newsCategory.category);
@@ -154,8 +155,8 @@ useEffect(() => {
   ) : (
     <>
       <div
-        className=" grid justify-center justify-items-center grid-cols-[repeat(auto-fill,minmax(310px,_1fr))] max-xl:grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] gap-[2rem_1rem] 
-    pt-6 px-8 overflow-x-hidden"
+        className={`grid justify-center justify-items-center grid-cols-[repeat(auto-fill,minmax(310px,_1fr))] max-xl:grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] gap-[2rem_1rem] 
+    pt-6 ${isMobile ? 'px-2' : 'px-8'} overflow-x-hidden`}
       >
         {/* {console.log(data)} */}
         {isSuccess &&

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createPortal } from 'react-dom';
 import {
   MdHomeFilled,
   MdOutlineSubscriptions,
@@ -56,6 +57,7 @@ const SideBar = () => {
     }
   };
 
+
   const [categoryGroup, setCategoryGroup] = useState([]);
   const [newsCategory, setNewsCategory] = useState([]);
 
@@ -94,12 +96,12 @@ const SideBar = () => {
   }
 
   return isMenuOpen ? (
-    !isMobile() ? (
-      <div className="sidebar__open border-r dark:border-none flex  flex-col w-[15rem]  h-[calc(100vh-4.625rem)] overflow-y-scroll min-w-fit bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500">
+    <>
+      <div className={`sidebar__open border-r dark:border-none flex ${isMobile() ? 'fixed top-0 z-30' : ''} flex-col w-[15rem]  h-[calc(100vh-4.625rem)] overflow-y-scroll min-w-fit bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500`}>
         <div className="first-part flex pl-2 pr-6  pb-4 flex-col text-sm w-[15rem] ">
           {
             categoryGroup.length && categoryGroup.map((category, index) => (
-              <Link to="/" key={index} data-id={category.id}>
+              <Link to="/" key={index} data-id={category.id} onClick={() => {dispatch(toggleMenu());}}>
                 <div className="home px-4 flex py-2 items-center hover:bg-zinc-100 dark:hover:bg-zinc-700 w-full rounded-lg  cursor-pointer">
                   {/* <MdHomeFilled size="1.5rem" className="mb-1 mr-4" /> */}
                   <span className="">{category.attributes.name}</span>
@@ -114,7 +116,8 @@ const SideBar = () => {
           {
             newsCategory?.length && newsCategory.map((newsCat) => (
               <Link
-                state={{type: 'CATEGORY', value: newsCat.id, item: newsCat }}
+              onClick={() => {dispatch(toggleMenu());}}
+                state={{ type: 'CATEGORY', value: newsCat.id, item: newsCat }}
                 to={{
                   pathname: `/${newsCat.attributes.name}`,
                   state: newsCat
@@ -125,7 +128,7 @@ const SideBar = () => {
                   <span>{newsCat.attributes.name}</span>
                 </div>
               </Link>
-              
+
             ))
           }
           <div className="pt-3 border-b border-zinc-200  w-full"></div>
@@ -159,32 +162,17 @@ const SideBar = () => {
           <div className="px-4 py-2 text-gray-400"> &copy; 2023 Google LLC</div>
         </div>
       </div>
-    ) : (
-      <div className="sidebar__closed pr-1 border-r dark:border-none flex flex-col text-xs w-18 items-center  h-[calc(100vh-4.625rem)] bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500">
-        <Link to="/" className=" w-full">
-          <div className="home py-4 flex flex-col items-center hover:bg-zinc-200 dark:hover:bg-zinc-700   w-full rounded-md">
-            <MdHomeFilled size="1.5rem" className="mb-1" />
-            <span>Home</span>
-          </div>
-        </Link>
-        <div className="shorts py-4 flex flex-col items-center  hover:bg-zinc-200 dark:hover:bg-zinc-700  w-full rounded-md">
-          <img
-            src={shortsLogo_light_theme}
-            alt="shorts-logo"
-            className="w-10 mb-1"
-          />
-          <span>Shorts</span>
-        </div>
-        <div className="subscriptions py-4 flex flex-col items-center  hover:bg-zinc-200  dark:hover:bg-zinc-700  w-full rounded-md">
-          <MdOutlineSubscriptions size="1.5rem" className="mb-1" />
-          <span>Subscriptions</span>
-        </div>
-        <div className="library py-4 flex flex-col items-center hover:bg-zinc-200 dark:hover:bg-zinc-700  w-full rounded-md">
-          <MdOutlineVideoLibrary size="1.5rem" className="mb-1" />
-          <span>Library</span>
-        </div>
-      </div>
-    )
+      {
+        isMobile() ? (
+          <>
+            {createPortal(
+              <div drawer-backdrop="" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-20" onClick={() => {dispatch(toggleMenu());}}></div>,
+              document.body
+            )}
+          </>
+        ) : null
+      }
+    </>
   ) : (
     !isMobile() && (
       <div className="sidebar__closed pr-1 border-r dark:border-none flex flex-col text-xs w-18 items-center  h-[calc(100vh-4.625rem)] bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500">

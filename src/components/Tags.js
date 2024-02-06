@@ -2,7 +2,7 @@ import { tags } from "../utils/constants";
 // import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { useEffect, useState } from "react";
 import { BASE_URL } from "./../utils/constants";
-import { handleScroll } from "../utils/helper";
+import { handleScroll, isMobile } from "../utils/helper";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link, useParams } from 'react-router-dom';
 import { changeCategory } from "../utils/categorySlice";
@@ -78,7 +78,7 @@ const Tags = () => {
       {
         !newsCategory ? (
           <div
-            className={`tags mx-4 flex text-sm items-center ${isMenuOpen
+            className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center ${isMenuOpen
               ? "lg:w-[calc(100vw-19rem)] w-[calc(100vw-8rem)]"
               : "lg:w-[calc(100vw-8rem)] w-[calc(100vw-3rem)]"
               } min-w-[250px]
