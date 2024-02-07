@@ -20,24 +20,24 @@ const BreadCrum = () => {
         <>
             {
                 pathList()?.length > 0 ? (
-                    <nav aria-label="Breadcrumb">
-                        <ol role="list" class="flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8 py-4">
+                    <nav aria-label="Breadcrumb" className="dark:bg-zinc-800 dark:text-white">
+                        <ol role="list" className="flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8 py-4">
                             <li>
-                                <div class="flex items-center">
-                                    <Link to="/" class="font-semibold text-sm text-slate-500 hover:text-slate-600 sm:block">
-                                    <BsHouseDownFill className="text-zinc-700" size="1.2rem" />
+                                <div className="flex items-center">
+                                    <Link to="/" className="text-sm hover:text-slate-600 sm:block">
+                                        <BsHouseDownFill className="dark:text-white" size="1.2rem" />
                                     </Link>
-                                    <div aria-hidden="true" class="font-semibold mx-2 select-none text-slate-400 sm:block">/</div>
+                                    <div aria-hidden="true" className="mx-2 select-none sm:block">/</div>
                                 </div>
                             </li>
                             {
                                 pathList()?.map((path, index) => (
                                     <li>
-                                        <div class="flex items-center">
-                                            <Link to={`/${pathList().slice(0, index + 1).join('/')}`} class="font-semibold text-sm text-slate-500 hover:text-slate-600 sm:block" style={path.length > 50 ? textEllipse : {whiteSpace: "nowrap"}}>{path.replaceAll('%20', ' ')}</Link>
+                                        <div className="flex items-center">
+                                            <Link to={`/${pathList().slice(0, index + 1).join('/')}`} className="text-sm hover:text-slate-600 sm:block" style={path.length > 50 ? textEllipse : {whiteSpace: "nowrap"}}>{path.replaceAll('%20', ' ')}</Link>
                                             {
                                                 (pathList().length - 1 !== index) ? (
-                                                    <div aria-hidden="true" class="font-semibold mx-2 select-none text-slate-400 sm:block">/</div>
+                                                    <div aria-hidden="true" className="mx-2 select-none sm:block">/</div>
                                                 ) : null
                                             }
                                         </div>
