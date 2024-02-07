@@ -104,7 +104,7 @@ const VideoCard = ({ article }) => {
   return (
     <article
       className="flex flex-col 
-     rounded-lg shadow-lg dark:bg-zinc-900 dark:text-white"
+     rounded-lg shadow-lg dark:bg-zinc-800 dark:text-white"
     >
       {
         mediaUrl ? (
