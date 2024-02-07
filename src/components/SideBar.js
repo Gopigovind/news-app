@@ -156,7 +156,7 @@ const SideBar = () => {
             <div className="cursor-pointer ml-1">Terms</div>
             <div className="cursor-pointer ml-1">Privacy</div>
             <div className="cursor-pointer ml-1">Policy & Safety</div>
-            <div className="cursor-pointer ml-1">How Streamy works</div>
+            <div className="cursor-pointer ml-1">How Hyper Local News Updates works</div>
             <div className="cursor-pointer ml-1">Test new features</div>
           </div>
           <div className="px-4 py-2 text-gray-400"> &copy; 2023 Google LLC</div>
