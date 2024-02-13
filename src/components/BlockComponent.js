@@ -5,6 +5,9 @@ import 'swiper/css/pagination';
 import 'swiper/swiper-bundle.css';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css/navigation';
+import { useSelector, useDispatch } from "react-redux";
+
+import { Link, useLocation, useParams } from "react-router-dom";
 // import required modules
 import { Navigation } from 'swiper/modules';
 import { BASE_URL } from "./../utils/constants";
@@ -28,6 +31,23 @@ const BlockComponent = (props) => {
             setData(null);
         }
     };
+
+    const dispatch = useDispatch();
+  const location = useLocation();
+  let {state= localStorage.getItem('stateValue'), district='', taluk='', newsCategory=''} = useParams();
+  const [path, setPath] = useState('')
+
+
+  
+  useEffect(() => {
+    if (state || district || taluk) {
+      // dispatch(changeCategory({ type: decodeURIComponent(location.pathname), value: decodeURIComponent(location.pathname) }));
+      const statePath = state ? `/${state}` : '';
+      const districtPath = district ? `/${district}` : '';
+      const talukpath = taluk ? `/${taluk}` : '';
+      setPath(`/news${statePath}${districtPath}${talukpath}`);
+    }
+  }, [state, district, taluk]);
 
     useEffect(() => {
         if (component) {
@@ -94,7 +114,15 @@ const BlockComponent = (props) => {
                             {
                                 data?.headlines?.data?.length > 0 && data?.headlines?.data?.map((articleCard) => (
                                     <SwiperSlide>
+                                        <Link
+                          className=""
+                          to={{
+                            pathname: `${path}/${articleCard?.attributes?.slug}`,
+                            state: articleCard,
+                          }}
+                        >
                                         <VideoCard article={articleCard}></VideoCard>
+                        </Link>
                                     </SwiperSlide>
                                 ))
                             }

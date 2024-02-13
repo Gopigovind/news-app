@@ -180,7 +180,6 @@ useEffect(() => {
                       return (
                         <Link
                           className="w-full flex"
-                          data-item={getAllKeyValues(article)}
                           to={{
                             pathname: `${path}/${article?.attributes?.slug}`,
                             state: article,

@@ -135,7 +135,7 @@ const VideoCard = ({ article }) => {
 
               ) : (
                 <>
-                  <video ref={videoRef} autoplay muted loop name="media" class="h-56 w-full object-cover rounded-t-lg shadow-sm">
+                  <video ref={videoRef} controls={true} autoplay={true} onMouseOver={event => event?.target?.play()} muted loop name="media" class="w-full object-cover rounded-t-lg shadow-sm">
                     <source src={mediaUrl} type="video/mp4" />
                   </video>
                 </>

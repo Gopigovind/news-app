@@ -7,7 +7,7 @@ import { BASE_URL } from "./../utils/constants";
 const MainContainer = () => {
 
   const [data, setData] = useState(null);
-
+  
   const getData = async () => {
     const pathUrl = `${BASE_URL}/pages?populate=*`;
       const response = await fetch(pathUrl);
