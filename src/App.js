@@ -5,6 +5,7 @@ import Body from "./components/Body";
 import Header from "./components/Header";
 import BreadCrum from "./components/BreadCrum";
 import MainContainer from "./components/MainContainer";
+import NewsMainContainer from './components/NewsMainContainer';
 import Search from "./components/Search";
 import WatchPage from "./components/WatchPage";
 import store from "./utils/store";
@@ -101,11 +102,11 @@ export const appRouter = createBrowserRouter([
 
           {
             path: "/:newsCategory",
-            element: <MainContainer />,
+            element: <NewsMainContainer />,
           },
           {
             path: "/:state?/:district?/:taluk?/:slug?",
-            element: <MainContainer />,
+            element: <NewsMainContainer />,
           },
           {
             path: "results",

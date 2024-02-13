@@ -105,7 +105,7 @@ const VideoCard = ({ article }) => {
     <article
       className="flex flex-col 
      rounded-lg shadow-lg dark:bg-zinc-800 dark:text-white"
-    >
+     style={{height: '100%'}}>
       {
         mediaUrl ? (
           <>
