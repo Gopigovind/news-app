@@ -7,14 +7,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link, useParams } from 'react-router-dom';
 import { changeCategory } from "../utils/categorySlice";
 
-const Tags = () => {
+const Tags = ({tagHanler}) => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
-  const [active, setActive] = useState('All');
+  const [active, setActive] = useState('');
+  const location = useLocation();
   let { state = localStorage.getItem('stateValue'), district = '', taluk = '', newsCategory = '' } = useParams();
   newsCategory = newsCategory === state ? '' : newsCategory;
   const handleSetHomeVideoByKeyword = (tag) => {
     if (active !== tag) {
       setActive(tag);
+      tagHanler && tagHanler(tag);
     }
   };
 
@@ -78,11 +80,7 @@ const Tags = () => {
       {
         !newsCategory ? (
           <div
-            className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center ${isMenuOpen
-              ? "lg:w-[calc(100vw-19rem)] w-[calc(100vw-8rem)]"
-              : "lg:w-[calc(100vw-8rem)] w-[calc(100vw-3rem)]"
-              } min-w-[250px]
-      pt-2`}
+            className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2`}
           >
             <div className="tags-wrapper flex w-full overflow-x-hidden overflow-y-hidden ">
               {tags?.items?.map((tag, index) => {
@@ -92,7 +90,7 @@ const Tags = () => {
                     replace
                     state={{ type: '', value: tag.id, item: tag }}
                     to={{
-                      pathname: `${tags.path}/${tag.attributes.name}`,
+                      pathname: `${location.pathname === '/' ? '' : `${tags.path}/${tag.attributes.name}`}`,
                       state: tag,
                     }}
                   >

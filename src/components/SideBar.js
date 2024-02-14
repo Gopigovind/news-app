@@ -97,7 +97,7 @@ const SideBar = () => {
 
   return isMenuOpen ? (
     <>
-      <div className={`sidebar__open border-r dark:border-none flex ${isMobile() ? 'fixed top-0 z-30' : ''} flex-col w-[15rem]  h-[calc(100vh-4.625rem)] overflow-y-scroll min-w-fit bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500`}>
+      <div className={`sidebar__open border-r dark:border-none flex ${isMobile() ? 'fixed top-0 z-30' : ''} flex-col w-[15rem] min-w-fit bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500`}>
         <div className="first-part flex pl-2 pr-6  pb-4 flex-col text-sm w-[15rem] ">
           {
             categoryGroup.length && categoryGroup.map((category, index) => (

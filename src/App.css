@@ -88,6 +88,7 @@
 .swiper.swiper-per-view {
   padding: 4px;
 }
+
 .swiper.swiper-per-view .swiper-button-next:after,
 .swiper.swiper-per-view .swiper-button-prev:after {
   font-size: 30px;

@@ -3,15 +3,13 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/swiper-bundle.css';
-import { Pagination } from 'swiper/modules';
 import 'swiper/css/navigation';
 import { useSelector, useDispatch } from "react-redux";
-
 import { Link, useLocation, useParams } from "react-router-dom";
-// import required modules
 import { Navigation } from 'swiper/modules';
 import { BASE_URL } from "./../utils/constants";
 import VideoCard from './VideoCard';
+import FeaturedNewsComponent from './FeaturedNewsComponent';
 
 const BlockComponent = (props) => {
 
@@ -20,7 +18,7 @@ const BlockComponent = (props) => {
     const [data, setData] = useState(null);
 
     const getData = async () => {
-        const pathUrl = `${BASE_URL}/pages?populate[blocks][populate]=${component},header,banner.image,readMore.image,headlines.media`;
+        const pathUrl = `${BASE_URL}/pages?populate[blocks][populate]=${component},header,banner.image,readMore.image,headlines.media,headlines.state,headlines.district`;
         const response = await fetch(pathUrl);
         const data = await response.json();
         if (data?.data?.length > 0) {
@@ -59,7 +57,7 @@ const BlockComponent = (props) => {
         <>
             {
                 component === 'blocks.hero-banner' ? (
-                    <div className='' style={{ display: 'inherit' }}>
+                    <div className='justify-center justify-items-center' style={{ display: 'inherit' }}>
                         <Swiper
                             navigation={true} modules={[Navigation]}
                             className="mySwiper"
@@ -81,6 +79,10 @@ const BlockComponent = (props) => {
 
                         </Swiper>
                     </div>
+                ) : component === 'blocks.featured-news' ? (
+                    <>
+                    <FeaturedNewsComponent data={data} />
+                    </>
                 ) : (
                     data?.headlines?.data?.length > 0 && 
                     <div className='dark:bg-zinc-800 dark:text-white' style={{ display: 'inherit' }}>
@@ -93,7 +95,6 @@ const BlockComponent = (props) => {
                         <Swiper
                             navigation={true}
                             modules={[Navigation]}
-                            slidesPerView={4}
                             spaceBetween={10}
                             breakpoints={{
                                 320: {
@@ -103,16 +104,16 @@ const BlockComponent = (props) => {
                                     slidesPerView: 2,
                                 },
                                 768: {
-                                    slidesPerView: 3,
+                                    slidesPerView: 2,
                                 },
-                                1200: {
-                                    slidesPerView: 4,
+                                1600: {
+                                    slidesPerView: 3,
                                 },
                             }}
                             className="swiper-per-view"
                         >
                             {
-                                data?.headlines?.data?.length > 0 && data?.headlines?.data?.map((articleCard) => (
+                                data?.headlines?.data?.map((articleCard) => (
                                     <SwiperSlide>
                                         <Link
                           className=""

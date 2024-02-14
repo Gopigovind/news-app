@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import VideoContainer from "./VideoContainer";
-import Tags from "./Tags";
 import BlockComponent from './BlockComponent';
 import { BASE_URL } from "./../utils/constants";
+import { isMobile } from '../utils/helper';
 
 const MainContainer = () => {
 
@@ -27,7 +26,7 @@ const MainContainer = () => {
        {
         data?.length > 0 && data[0].attributes.blocks.map((item, index) => (
           <div
-        className={`grid justify-center justify-items-center pt-6 px-4`}
+        className={`grid pt-6 ${isMobile ? 'px-2' : 'px-8'}`}
       >
         <BlockComponent component={item.__component} />
       </div>
