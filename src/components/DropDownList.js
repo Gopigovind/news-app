@@ -6,14 +6,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const DropDownList = ({dataSource}) => {
+const DropDownList = ({ dataSource, value, key }) => {
   const [selected, setSelected] = useState();
 
   useEffect(() => {
     if (dataSource?.length > 0) {
-        const defaultItem = dataSource.filter(item => item.attributes.name === 'Tamil Nadu' || 'தமிழ் நாடு')[0];
-        localStorage.setItem('stateValue', defaultItem?.attributes.name);
-        setSelected(defaultItem);
+      const defaultItem = dataSource.filter(item => (item?.attributes?.localName || item.code) === value)[0];
+      localStorage.setItem(key, defaultItem?.attributes?.name || defaultItem?.name);
+      setSelected(defaultItem);
     }
   }, [dataSource]);
 
@@ -25,7 +25,7 @@ const DropDownList = ({dataSource}) => {
             <Listbox.Button className="relative w-full cursor-default bg-white dark:bg-zinc-900 dark:text-white py-1.5 pl-3 pr-10 text-left text-gray-700 focus:outline-none sm:text-sm sm:leading-6">
               <span className="flex items-center">
                 {/* <img src={selected?.avatar || ''} alt="" className="h-5 w-5 flex-shrink-0 rounded-full" /> */}
-                <span className="ml-3 block truncate">{selected?.attributes?.name}</span>
+                <span className="ml-3 block truncate">{selected?.attributes?.name || selected?.name}</span>
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                 <ChevronDownIcon className="h-5 w-5 text-gray-700" aria-hidden="true" />
@@ -40,7 +40,7 @@ const DropDownList = ({dataSource}) => {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute z-10 mt-1 min-w-fit max-h-56 w-full overflow-auto rounded-md bg-white dark:bg-zinc-900 dark:text-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {dataSource.map((item) => (
+                {dataSource?.map((item) => (
                   <Listbox.Option
                     key={item.id}
                     className={({ active }) =>
@@ -58,15 +58,18 @@ const DropDownList = ({dataSource}) => {
                           <span
                             className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}
                           >
-                            {item.attributes.name}
+                            {item.attributes?.name || item.name}
                           </span>
-                          <span
-                            className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}
-                          >
-                            {item.attributes.localName}
-                          </span>
+                          {
+                            item?.attributes?.localName && (
+                              <span
+                                className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}
+                              >
+                                {item.attributes.localName}
+                              </span>
+                            )
+                          }
                         </div>
-
                         {selected ? (
                           <span
                             className={classNames(

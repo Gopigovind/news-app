@@ -11,7 +11,7 @@ const Tags = ({tagHanler}) => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
   const [active, setActive] = useState('');
   const location = useLocation();
-  let { state = localStorage.getItem('stateValue'), district = '', taluk = '', newsCategory = '' } = useParams();
+  let { state = localStorage.getItem('stateValue') || 'தமிழ் நாடு', district = '', taluk = '', newsCategory = '' } = useParams();
   newsCategory = newsCategory === state ? '' : newsCategory;
   const handleSetHomeVideoByKeyword = (tag) => {
     if (active !== tag) {
@@ -90,7 +90,7 @@ const Tags = ({tagHanler}) => {
                     replace
                     state={{ type: '', value: tag.id, item: tag }}
                     to={{
-                      pathname: `${location.pathname === '/' ? '' : `${tags.path}/${tag.attributes.name}`}`,
+                      pathname: `${tags.path}/${tag.attributes.name}`,
                       state: tag,
                     }}
                   >

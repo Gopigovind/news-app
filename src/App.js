@@ -29,61 +29,6 @@ import { isMobile } from "./utils/helper";
 */
 export const queryClient = new QueryClient();
 
-// export const appRouter = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <App />,
-//     errorElement: <div>notfound</div>,
-//     children: [
-//       {
-//         path: "/",
-//         element: <Body />,
-//         children: [
-//           {
-//             path: "/",
-//             element: <MainContainer />,
-//           },
-//           {
-//             path: "/:state",
-//             element: <MainContainer />,
-//           },
-//           {
-//             path: "/:state/:district",
-//             element: <MainContainer />,
-//           },
-//           {
-//             path: "/:state/:district/:taluk",
-//             element: <MainContainer />,
-//           },
-//           // {
-//           //   path: "/:category",
-//           //   element: <MainContainer />,
-//           // },
-//           {
-//             path: "results",
-//             element: <Search />,
-//           },
-//         ],
-//       },
-//       {
-//         path: "news/:state/:district/:taluk/:slug",
-//         element: <WatchPage />,
-//       },
-//       {
-//         path: "news/:state/:slug",
-//         element: <WatchPage />,
-//       },
-//       {
-//         path: "news/:state/:district/:slug",
-//         element: <WatchPage />,
-//       },
-//       {
-//         path: "news/:state/:district/:taluk/:slug",
-//         element: <WatchPage />,
-//       },
-//     ],
-//   },
-// ]);
 
 export const appRouter = createBrowserRouter([
   {
@@ -97,7 +42,7 @@ export const appRouter = createBrowserRouter([
         children: [
           {
             path: "/",
-            element: <MainContainer />,
+            element: <NewsMainContainer />,
           },
 
           {

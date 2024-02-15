@@ -26,7 +26,17 @@ import mic_open from "../assests/mic_open.gif";
 import DropDownList from "./DropDownList";
 
 export const RightSideComp = () => {
+  const [localeData, setLocaleData] = useState([]);
 
+  const localeApiHandler = async () => {
+    const response = await fetch(`${BASE_URL}/i18n/locales`);
+    const data = await response.json();
+    setLocaleData(data);
+  }
+
+  useEffect(() => {
+    localeApiHandler();
+  }, []);
   const { theme, setTheme } = useContext(ThemeContext);
 
   const handleThemeChange = () => {
@@ -36,7 +46,7 @@ export const RightSideComp = () => {
   };
 
   return (
-    <div className="right-menu flex  items-center sm:ml-4 lg:ml-16 gap-5 p-2">
+    <div className="right-menu flex items-center sm:ml-4 lg:ml-16 gap-5 p-2" style={{flexDirection: isMobile ? 'row-reverse' : ''}}>
       <div className="toggle-dark-mode-switch  flex items-center gap-2">
         <label
           htmlFor="check"
@@ -56,8 +66,8 @@ export const RightSideComp = () => {
         </label>
       </div>
 
-      <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
-        <RiVideoAddLine size="1.5rem" />
+      <div className="full cursor-pointer">
+        { localeData?.length > 0 && <DropDownList dataSource={localeData} value={'ta'} key={'localeName'} /> }
       </div>
       <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
         <IoMdNotificationsOutline size="1.5rem" />
@@ -111,7 +121,9 @@ const LeftMenu = () => {
           />
         </a>
       </div>
-      <DropDownList dataSource={stateData} />
+      <div className="p-2 max-sm:hidden ">
+        <DropDownList dataSource={stateData} value={'Tamilnadu'} key={'stateValue'} />
+      </div>
     </>
   )
 };
