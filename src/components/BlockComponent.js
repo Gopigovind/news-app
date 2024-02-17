@@ -16,9 +16,12 @@ const BlockComponent = (props) => {
     const { component } = props;
 
     const [data, setData] = useState(null);
+    const dispatch = useDispatch();
+  const location = useLocation();
+  const localeName = useSelector((store) => store.app.locale);
 
     const getData = async () => {
-        const pathUrl = `${BASE_URL}/pages?populate[blocks][populate]=${component},header,banner.image,readMore.image,headlines.media,headlines.state,headlines.district`;
+        const pathUrl = `${BASE_URL}/pages??locale=${localeName}&populate[blocks][populate]=${component},header,banner.image,readMore.image,headlines.media,headlines.state,headlines.district`;
         const response = await fetch(pathUrl);
         const data = await response.json();
         if (data?.data?.length > 0) {
@@ -30,16 +33,14 @@ const BlockComponent = (props) => {
         }
     };
 
-    const dispatch = useDispatch();
-  const location = useLocation();
-  let {state= localStorage.getItem('stateValue'), district='', taluk='', newsCategory=''} = useParams();
+  const stateName = useSelector((store) => store.app.stateName);
+  let {state= stateName, district='', taluk='', newsCategory=''} = useParams();
   const [path, setPath] = useState('')
 
 
   
   useEffect(() => {
     if (state || district || taluk) {
-      // dispatch(changeCategory({ type: decodeURIComponent(location.pathname), value: decodeURIComponent(location.pathname) }));
       const statePath = state ? `/${state}` : '';
       const districtPath = district ? `/${district}` : '';
       const talukpath = taluk ? `/${taluk}` : '';
@@ -51,7 +52,7 @@ const BlockComponent = (props) => {
         if (component) {
             getData();
         }
-    }, [component]);
+    }, [component, localeName]);
 
     return (
         <>

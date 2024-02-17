@@ -49,26 +49,21 @@ const SideBar = () => {
     checkisMobile();
     // eslint-disable-next-line
   }, []);
-  const isMobile = () => {
-    if (window.innerWidth <= 768) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  const isMobile = () => window.innerWidth <= 1300;
 
 
   const [categoryGroup, setCategoryGroup] = useState([]);
   const [newsCategory, setNewsCategory] = useState([]);
+  const localeName = useSelector((store) => store.app.locale);
 
   const getCategoryGroup = async () => {
-    const response = await fetch(`${BASE_URL}/category-groups`);
+    const response = await fetch(`${BASE_URL}/category-groups?locale=${localeName}`);
     const { data } = await response.json();
     setCategoryGroup(data);
   }
 
   const getNewsCategory = async () => {
-    const response = await fetch(`${BASE_URL}/news-categories`);
+    const response = await fetch(`${BASE_URL}/news-categories?locale=${localeName}`);
     const { data } = await response.json();
     setNewsCategory(data);
   }
@@ -76,7 +71,8 @@ const SideBar = () => {
   useEffect(() => {
     getCategoryGroup();
     getNewsCategory();
-  }, []);
+  }, [localeName]);
+
   useEffect(() => {
     const handleWindowResize = () => {
       if (isMenuOpen && window.innerWidth < breakpoint) {
@@ -174,7 +170,7 @@ const SideBar = () => {
       }
     </>
   ) : (
-    !isMobile() && (
+    (
       <div className="sidebar__closed pr-1 border-r dark:border-none flex flex-col text-xs w-18 items-center  h-[calc(100vh-4.625rem)] bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500">
         <Link to="/" className=" w-full">
           <div className="home py-4 flex flex-col items-center hover:bg-zinc-200 dark:hover:bg-zinc-700  w-full rounded-md">

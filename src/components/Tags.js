@@ -9,9 +9,10 @@ import { changeCategory } from "../utils/categorySlice";
 
 const Tags = ({tagHanler}) => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
+  const stateName = useSelector((store) => store.app.stateName);
   const [active, setActive] = useState('');
   const location = useLocation();
-  let { state = localStorage.getItem('stateValue') || 'தமிழ் நாடு', district = '', taluk = '', newsCategory = '' } = useParams();
+  let { state = stateName || 'தமிழ் நாடு', district = '', taluk = '', newsCategory = '' } = useParams();
   newsCategory = newsCategory === state ? '' : newsCategory;
   const handleSetHomeVideoByKeyword = (tag) => {
     if (active !== tag) {
@@ -24,21 +25,22 @@ const Tags = ({tagHanler}) => {
   district = decodeURIComponent(district);
   taluk = decodeURIComponent(taluk);
   newsCategory = decodeURIComponent(newsCategory);
+  const localeName = useSelector((store) => store.app.locale);
 
   const [tags, setTags] = useState({ path: '', items: [] });
   const districtHandler = async (state) => {
-    const response = await fetch(`${BASE_URL}/districts?fields[0]=name&populate[state][fields][0]=name&filters[state][name][$in][0]=${state}`);
+    const response = await fetch(`${BASE_URL}/districts?locale=${localeName}&fields[0]=name&populate[state][fields][0]=name&filters[state][name][$in][0]=${state}`);
     const { data } = await response.json();
     setTags({ path: `/${state}`, items: data });
   }
   const talukHandler = async (district) => {
-    const response = await fetch(`${BASE_URL}/taluks?fields[0]=name&populate[state][fields][0]=name&populate[district][fields][0]=name&filters[district][name][$in][0]=${district}`);
+    const response = await fetch(`${BASE_URL}/taluks?locale=${localeName}&fields[0]=name&populate[state][fields][0]=name&populate[district][fields][0]=name&filters[district][name][$in][0]=${district}`);
     const { data } = await response.json();
     setTags({ path: `/${state}/${district}`, items: data });
   }
 
   const cityHandler = async (taluk) => {
-    const response = await fetch(`${BASE_URL}/localities?fields[0]=name&populate[state][fields][0]=name&populate[district][fields][0]=name&populate[taluk][fields][0]=name&filters[taluk][name][$in][0]=${taluk}`);
+    const response = await fetch(`${BASE_URL}/localities?locale=${localeName}&fields[0]=name&populate[state][fields][0]=name&populate[district][fields][0]=name&populate[taluk][fields][0]=name&filters[taluk][name][$in][0]=${taluk}`);
     const { data } = await response.json();
     setTags(data);
   }
@@ -73,7 +75,7 @@ const Tags = ({tagHanler}) => {
     if (district && !taluk) {
       talukHandler(district);
     }
-  }, [district, taluk, state]);
+  }, [district, taluk, state, localeName]);
 
   return (
     <>

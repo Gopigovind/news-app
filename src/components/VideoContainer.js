@@ -13,9 +13,11 @@ import { isMobile } from '../utils/helper';
 
 const VideoContainer = () => {
   const category = useSelector((store) => store.newsCategory.category);
+  const stateName = useSelector((store) => store.app.stateName);
+  const localeName = useSelector((store) => store.app.locale);
   const dispatch = useDispatch();
   const location = useLocation();
-  let {state= localStorage.getItem('stateValue'), district='', taluk='', newsCategory=''} = useParams();
+  let {state= stateName, district='', taluk='', newsCategory=''} = useParams();
   
 
   let date = new Date();
@@ -32,21 +34,6 @@ const VideoContainer = () => {
   // eslint-disable-next-line
   publishedAfter = encodeURIComponent(publishedAfter.toJSON());
 
-  /* 
-  `/search?part=snippet&order=viewCount&publishedAfter=${publishedAfter}&publishedBefore=${date}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
-
-  const response = await fetch(
-          BASE_URL +
-            `/search?part=snippet&order=viewCount&publishedAfter=${publishedAfter}&type=video&videoDuration=medium&publishedBefore=${date}&key=${
-              process.env.REACT_APP_GOOGLE_API_KEY
-            }&regionCode=IN&pageToken=${nextPageToken ?? ''}`
-        );
-
-
-  `/videos?part=snippet%2CcontentDetails%2Cstatistics&maxResults=5&chart=mostPopular&regionCode=IN&pageToken=${nextPageToken ?? ""}&videoDuration=medium&key=` +
-            process.env.REACT_APP_GOOGLE_API_KEY
- */
-
   const bottomRef = useRef();
 
   let onScreen = useIntersectionObserver(bottomRef, { threshold: 0.5 });
@@ -55,8 +42,8 @@ const VideoContainer = () => {
     try {
       nextPageToken = nextPageToken || 0;
       const paginationUrl = `&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
-      const pathUrl = newsCategory ? `${BASE_URL}/headlines?populate=*&sort=publishedAt:desc&filters[locale][$contains][0]=ta&filters[news_category][[name]][$contains][0]=${newsCategory}${paginationUrl}` 
-      : location.pathname === '/' ? `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[locale][$contains][0]=ta${paginationUrl}` : `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[locale][$contains][0]=ta&filters[state][name][$contains][0]=${state}&filters[district][name][$contains][0]=${district}&filters[taluk][name][$contains][0]=${taluk}${paginationUrl}`;
+      const pathUrl = newsCategory ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[news_category][[name]][$contains][0]=${newsCategory}${paginationUrl}` 
+      : location.pathname === '/' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}${paginationUrl}`;
       const response = await fetch(pathUrl);
       const data = await response.json();
       return data;
@@ -67,7 +54,7 @@ const VideoContainer = () => {
 
   let { data, isLoading, fetchNextPage, isFetchingNextPage, isSuccess } =
     useInfiniteQuery(
-      ["home-videos", category, state, district, taluk, newsCategory, location.pathname],
+      ["home-videos", localeName, category, state, district, taluk, newsCategory, location.pathname],
       ({ pageParam = null }) =>
         (category?.type !== "SEARCH" && (state || district || taluk || newsCategory || location.pathname))
           ? getVideos(pageParam)
@@ -111,10 +98,10 @@ const VideoContainer = () => {
       nextPageToken = nextPageToken || 0;
       switch(category?.type) {
         case 'SEARCH':
-          apiUrl = `${BASE_URL}/headlines?populate=*&sort=publishedAt:desc&filters[state][name][$contains][0]=${state}&filters[title][$containsi][0]=${category.value}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
+          apiUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${state ? `&filters[state][name][$contains][0]=${state}` : ''}&filters[title][$containsi][0]=${category.value}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
           break;
          default :
-          apiUrl = `${BASE_URL}/headlines/?populate=*&sort=publishedAt:desc&filters[state][name][$contains][0]=${state}&filters[district][name][$contains][0]=${district}&filters[taluk][name][$contains][0]=${taluk}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`
+          apiUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`
          break;
       }
       const response = await fetch(apiUrl);

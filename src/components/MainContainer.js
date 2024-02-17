@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import BlockComponent from './BlockComponent';
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "./../utils/constants";
 import { isMobile } from '../utils/helper';
 
 const MainContainer = () => {
 
   const [data, setData] = useState(null);
+  const localeName = useSelector((store) => store.app.locale);
   
   const getData = async () => {
-    const pathUrl = `${BASE_URL}/pages?populate=*`;
+    const pathUrl = `${BASE_URL}/pages?locale=${localeName}&populate=*`;
       const response = await fetch(pathUrl);
       const data = await response.json();
       setData(data.data);
@@ -16,7 +18,7 @@ const MainContainer = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [localeName]);
 
   return (
     <div className=" flex-1 bg-white dark:bg-zinc-900 transition-all duration-500">

@@ -12,9 +12,10 @@ import { isMobile } from '../utils/helper';
 
 const FeaturedNewsComponent = ({ data }) => {
     const category = useSelector((store) => store.newsCategory.category);
+    const stateName = useSelector((store) => store.app.stateName);
     const dispatch = useDispatch();
     const location = useLocation();
-    let { state = localStorage.getItem('stateValue'), district = '', taluk = '', newsCategory = '' } = useParams();
+    let { state = stateName, district = '', taluk = '', newsCategory = '' } = useParams();
 
     newsCategory = newsCategory === state ? '' : newsCategory;
 

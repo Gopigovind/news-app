@@ -100,7 +100,7 @@ const WatchPage = () => {
 
   const dispatch = useDispatch();
   const isSideBarOpen = useSelector((store) => store.app.isSideBarOpen);
-
+  const localeName = useSelector((store) => store.app.locale);
   useEffect(() => {
     if (isSideBarOpen) {
       dispatch(toggleSideBar());
@@ -110,13 +110,13 @@ const WatchPage = () => {
 
   const getVideoDetail = async () => {
     const response = await fetch(
-    `${BASE_URL}/headlines/?populate=*&filters[slug][$eq][0]=${slug}`);
+    `${BASE_URL}/headlines?locale=${localeName}&populate=*&filters[slug][$eq][0]=${slug}`);
     const data = await response.json();
     return data.data;
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["watch-page", "video-details", slug],
+    queryKey: [localeName, "watch-page", "video-details", slug],
     queryFn: () => getVideoDetail(slug),
     refetchOnWindowFocus: false,
     refetchOnmount: false,

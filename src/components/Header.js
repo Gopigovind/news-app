@@ -6,7 +6,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
 import logo from "../assests/logo.jpg";
 import logo_dark_theme from "../assests/logo_dark_theme.webp";
-import { toggleMenu, toggleSideBar } from "../utils/appSlice";
+import { toggleMenu, toggleSideBar, updateState } from "../utils/appSlice";
 import { BASE_URL } from "./../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
@@ -20,14 +20,16 @@ import ThemeContext from "../utils/ThemeContext";
 import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { useVoice } from "../utils/useVoice";
 import { changeCategory } from "../utils/categorySlice";
+import { updateLocale } from "../utils/appSlice";
 import { isMobile } from '../utils/helper'
 
 import mic_open from "../assests/mic_open.gif";
 import DropDownList from "./DropDownList";
 
 export const RightSideComp = () => {
+  const localeName = useSelector((store) => store.app.locale);
   const [localeData, setLocaleData] = useState([]);
-
+  const dispatch = useDispatch();
   const localeApiHandler = async () => {
     const response = await fetch(`${BASE_URL}/i18n/locales`);
     const data = await response.json();
@@ -44,6 +46,10 @@ export const RightSideComp = () => {
     setTheme(isCurrentDark ? "light" : "dark");
     localStorage.setItem("theme", isCurrentDark ? "light" : "dark");
   };
+
+  const changeLocale = (item) => {
+    dispatch(updateLocale(item.code));
+  }
 
   return (
     <div className="right-menu flex items-center sm:ml-4 lg:ml-16 gap-5 p-2" style={{flexDirection: isMobile ? 'row-reverse' : ''}}>
@@ -67,7 +73,7 @@ export const RightSideComp = () => {
       </div>
 
       <div className="full cursor-pointer">
-        { localeData?.length > 0 && <DropDownList dataSource={localeData} value={'ta'} key={'localeName'} /> }
+        { localeData?.length > 0 && <DropDownList dataSource={localeData} value={localeName} onChange={changeLocale} /> }
       </div>
       <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
         <IoMdNotificationsOutline size="1.5rem" />
@@ -80,7 +86,8 @@ export const RightSideComp = () => {
 };
 
 const LeftMenu = () => {
-
+  const stateName = useSelector((store) => store.app.stateName);
+  const localeName = useSelector((store) => store.app.locale);
   const dispatch = useDispatch();
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
@@ -90,14 +97,18 @@ const LeftMenu = () => {
   const [stateData, setStateData] = useState([]);
 
   const stateApiHandler = async () => {
-    const response = await fetch(`${BASE_URL}/states`);
+    const response = await fetch(`${BASE_URL}/states?locale=${localeName}`);
     const { data } = await response.json();
     setStateData(data);
   }
 
   useEffect(() => {
     stateApiHandler();
-  }, []);
+  }, [localeName]);
+
+  const changeState = (item) => {
+    dispatch(updateState(item?.attributes?.name));
+  }
 
   return (
     <>
@@ -122,7 +133,7 @@ const LeftMenu = () => {
         </a>
       </div>
       <div className="p-2 max-sm:hidden ">
-        <DropDownList dataSource={stateData} value={'Tamilnadu'} key={'stateValue'} />
+        <DropDownList dataSource={stateData} value={stateName} onChange={changeState} />
       </div>
     </>
   )
@@ -131,6 +142,7 @@ const LeftMenu = () => {
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const debounceSearchText = useDebounce(searchQuery, 200);
+  const localeName = useSelector((store) => store.app.locale);
   const [loading, setLoading] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
   const searchRef = useClickOutside(() => setLoading(true));
@@ -173,7 +185,7 @@ const Header = () => {
 
     const getAutocompletion = async (searchText) => {
       // console.log('api call made for text -> ', searchText);
-      const response = await fetch(`${BASE_URL}/headlines/?populate=*`);
+      const response = await fetch(`${BASE_URL}/headlines/?locale=${localeName}&populate=*`);
       const { data } = await response.json();
       dispatch(cacheResults({ [searchText]: data[1] }));
       setSuggestions(data[1]);

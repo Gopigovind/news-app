@@ -6,25 +6,28 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const DropDownList = ({ dataSource, value, key }) => {
+const DropDownList = ({ dataSource, value, onChange }) => {
   const [selected, setSelected] = useState();
 
   useEffect(() => {
     if (dataSource?.length > 0) {
-      const defaultItem = dataSource.filter(item => (item?.attributes?.localName || item.code) === value)[0];
-      localStorage.setItem(key, defaultItem?.attributes?.name || defaultItem?.name);
+      const defaultItem = dataSource.filter(item => (item?.attributes?.name || item.code) === value)[0];
       setSelected(defaultItem);
     }
   }, [dataSource]);
 
+  const changeHandler = (item) => {
+    setSelected(item);
+    onChange && onChange(item);
+  }
+
   return (
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={selected} onChange={changeHandler}>
       {({ open }) => (
         <>
           <div className="relative mt-2">
             <Listbox.Button className="relative w-full cursor-default bg-white dark:bg-zinc-900 dark:text-white py-1.5 pl-3 pr-10 text-left text-gray-700 focus:outline-none sm:text-sm sm:leading-6">
               <span className="flex items-center">
-                {/* <img src={selected?.avatar || ''} alt="" className="h-5 w-5 flex-shrink-0 rounded-full" /> */}
                 <span className="ml-3 block truncate">{selected?.attributes?.name || selected?.name}</span>
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
