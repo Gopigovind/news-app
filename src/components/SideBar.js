@@ -33,6 +33,7 @@ import { useDispatch } from "react-redux";
 import { BASE_URL } from "./../utils/constants";
 import { toggleMenu } from "../utils/appSlice";
 import { Link } from "react-router-dom";
+import { isMobile as mobileDevice } from "../utils/helper";
 
 const SideBar = () => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
@@ -170,7 +171,7 @@ const SideBar = () => {
       }
     </>
   ) : (
-    (
+    !mobileDevice && (
       <div className="sidebar__closed pr-1 border-r dark:border-none flex flex-col text-xs w-18 items-center  h-[calc(100vh-4.625rem)] bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500">
         <Link to="/" className=" w-full">
           <div className="home py-4 flex flex-col items-center hover:bg-zinc-200 dark:hover:bg-zinc-700  w-full rounded-md">

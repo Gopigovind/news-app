@@ -105,7 +105,7 @@ const VideoCard = ({ article }) => {
     <article
       className="flex w-full flex-col 
      rounded-lg shadow-lg dark:bg-zinc-800 dark:text-white"
-     style={{height: '100%'}}>
+      style={{ height: '100%' }}>
       {
         mediaUrl ? (
           <>
@@ -145,13 +145,14 @@ const VideoCard = ({ article }) => {
         ) : articleCard.videoUrl?.url && (<div className="article-card flex flex-col" dangerouslySetInnerHTML={{ __html: articleCard.videoUrl?.url }}></div>)
       }
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 flex flex-col p-5">
+        <div className="flex-1 flex flex-col p-4">
           <h2 className="font-bold font-serif">{articleCard.title}</h2>
-          <section className="mt-2 flex-1">
+          {articleCard.description && <section className="mt-2 flex-1">
             <p className="text-xs line-clamp-6">{articleCard.description}</p>
           </section>
+          }
           <footer
-            className="text-xs flex space-x-1 pt-5 italic text-gray-400"
+            className="text-xs flex space-x-1 pt-3 italic text-gray-400"
           >
             <p>{articleCard.source} - </p>
             <p>{moment(articleCard.publishedAt).fromNow()}</p>
