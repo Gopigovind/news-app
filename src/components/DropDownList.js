@@ -48,8 +48,8 @@ const DropDownList = ({ dataSource, value, onChange }) => {
                     key={item.id}
                     className={({ active }) =>
                       classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-800',
-                        'relative cursor-default select-none py-2 pl-3 pr-9'
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-800 dark:bg-zinc-800 dark:text-white',
+                        'relative cursor-default select-none py-2 pl-3 pr-9 '
                       )
                     }
                     value={item}
