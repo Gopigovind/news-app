@@ -6,7 +6,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const DropDownList = ({ dataSource, value, onChange, clickHandler }) => {
+const DropDownList = ({ dataSource, value, onChange, clickHandler, isHide=false }) => {
   const [selected, setSelected] = useState();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const DropDownList = ({ dataSource, value, onChange, clickHandler }) => {
       const defaultItem = dataSource.filter(item => (item?.attributes?.name || item.code) === value)[0];
       setSelected(defaultItem);
     }
-  }, [dataSource]);
+  }, [dataSource, value]);
 
   const changeHandler = (item) => {
     setSelected(item);
@@ -29,7 +29,7 @@ const DropDownList = ({ dataSource, value, onChange, clickHandler }) => {
       {({ open }) => (
         <>
           <div className="relative mt-2">
-            <Listbox.Button onClick={ddlClickHandler} className="relative w-full cursor-default bg-white dark:bg-zinc-900 dark:text-white py-1.5 pl-3 pr-10 text-left text-gray-700 focus:outline-none sm:text-sm sm:leading-6">
+            <Listbox.Button onClick={ddlClickHandler} className="relative w-full cursor-pointer bg-white dark:bg-zinc-900 dark:text-white py-1.5 pl-3 pr-10 text-left text-gray-700 focus:outline-none sm:text-sm sm:leading-6">
               <span className="flex items-center">
                 <span className="ml-3 block truncate">{selected?.attributes?.name || selected?.name}</span>
               </span>
@@ -39,7 +39,7 @@ const DropDownList = ({ dataSource, value, onChange, clickHandler }) => {
             </Listbox.Button>
 
             <Transition
-              show={open}
+              show={open && !isHide}
               as={Fragment}
               leave="transition ease-in duration-100"
               leaveFrom="opacity-100"

@@ -33,6 +33,7 @@ import Modal from "./Modal";
 export const RightSideComp = () => {
   const localeName = useSelector((store) => store.app.locale);
   const [localeData, setLocaleData] = useState([]);
+  const [locale, setLocale] = useState(localeName);
   const dispatch = useDispatch();
   const localeApiHandler = async () => {
     const response = await fetch(`${BASE_URL}/i18n/locales`);
@@ -43,6 +44,9 @@ export const RightSideComp = () => {
   useEffect(() => {
     localeApiHandler();
   }, []);
+  useEffect(() => {
+    setLocale(localeName);
+  }, [localeName]);
   const { theme, setTheme } = useContext(ThemeContext);
 
   const handleThemeChange = () => {
@@ -81,7 +85,7 @@ export const RightSideComp = () => {
       </div>
 
       <div className="full cursor-pointer">
-        {localeData?.length > 0 && <DropDownList dataSource={localeData} value={localeName} onChange={changeLocale} clickHandler={clickHandler} />}
+        {localeData?.length > 0 && <DropDownList dataSource={localeData} isHide={true} value={locale} onChange={changeLocale} clickHandler={clickHandler} />}
       </div>
       <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
         <IoMdNotificationsOutline size="1.5rem" />
@@ -147,7 +151,7 @@ const LeftMenu = () => {
       <div className="p-2 max-sm:hidden ">
         {/* <DropDownList dataSource={stateData} value={stateName} onChange={changeState} clickHandler={clickHandler} /> */}
         <Listbox value={stateName}>
-          <Listbox.Button onClick={clickHandler} className="relative w-full cursor-default bg-white dark:bg-zinc-900 dark:text-white py-1.5 pl-3 pr-10 text-left text-gray-700 focus:outline-none sm:text-sm sm:leading-6">
+          <Listbox.Button onClick={clickHandler} className="cursor-pointer relative w-full bg-white dark:bg-zinc-900 dark:text-white py-1.5 pl-3 pr-10 text-left text-gray-700 focus:outline-none sm:text-sm sm:leading-6">
             <span className="flex items-center">
               <span className="ml-3 block truncate">{districtName ? districtName : stateName}</span>
             </span>
