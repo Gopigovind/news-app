@@ -15,9 +15,10 @@ const VideoContainer = () => {
   const category = useSelector((store) => store.newsCategory.category);
   const stateName = useSelector((store) => store.app.stateName);
   const localeName = useSelector((store) => store.app.locale);
+  const districtName = useSelector((store) => store.app.districtName);
   const dispatch = useDispatch();
   const location = useLocation();
-  let {state= stateName, district='', taluk='', newsCategory=''} = useParams();
+  let {state= stateName, district=districtName, taluk='', newsCategory=''} = useParams();
   
 
   let date = new Date();
@@ -43,7 +44,7 @@ const VideoContainer = () => {
       nextPageToken = nextPageToken || 0;
       const paginationUrl = `&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
       const pathUrl = newsCategory ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[news_category][[name]][$contains][0]=${newsCategory}${paginationUrl}` 
-      : location.pathname === '/' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}${paginationUrl}`;
+      : location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}${paginationUrl}`;
       const response = await fetch(pathUrl);
       const data = await response.json();
       return data;

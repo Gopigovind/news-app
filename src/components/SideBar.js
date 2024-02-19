@@ -97,8 +97,8 @@ const SideBar = () => {
       <div className={`sidebar__open border-r dark:border-none flex ${isMobile() ? 'fixed top-0 z-30' : ''} flex-col w-[15rem] min-w-fit bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500`}>
         <div className="first-part flex pl-2 pr-6  pb-4 flex-col text-sm w-[15rem] ">
           {
-            categoryGroup.length && categoryGroup.map((category, index) => (
-              <Link to="/" key={index} data-id={category.id} onClick={() => {dispatch(toggleMenu());}}>
+            categoryGroup.length > 0 && categoryGroup.map((category, index) => (
+              <Link to="/" key={index} data-id={category.id} onClick={() => { dispatch(toggleMenu()); }}>
                 <div className="home px-4 flex py-2 items-center hover:bg-zinc-100 dark:hover:bg-zinc-700 w-full rounded-lg  cursor-pointer">
                   {/* <MdHomeFilled size="1.5rem" className="mb-1 mr-4" /> */}
                   <span className="">{category.attributes.name}</span>
@@ -106,14 +106,20 @@ const SideBar = () => {
               </Link>
             ))
           }
-          <div className="pt-3 border-b border-zinc-200 w-full"></div>
-          <div className="pt-4 pl-4 mb-2">
-            <span className="text-base font-semibold">News</span>
-          </div>
           {
-            newsCategory?.length && newsCategory.map((newsCat) => (
+            newsCategory?.length > 0 && (
+              <>
+                <div className="pt-3 border-b border-zinc-200 w-full"></div>
+                <div className="pt-4 pl-4 mb-2">
+                  <span className="text-base font-semibold">News</span>
+                </div>
+              </>
+            )
+          }
+          {
+            newsCategory?.length > 0 && newsCategory.map((newsCat) => (
               <Link
-              onClick={() => {dispatch(toggleMenu());}}
+                onClick={() => { dispatch(toggleMenu()); }}
                 state={{ type: 'CATEGORY', value: newsCat.id, item: newsCat }}
                 to={{
                   pathname: `/${newsCat.attributes.name}`,
@@ -128,7 +134,7 @@ const SideBar = () => {
 
             ))
           }
-          <div className="pt-3 border-b border-zinc-200  w-full"></div>
+          {/* <div className="pt-3 border-b border-zinc-200  w-full"></div>
           <div className="pt-4 pl-4">
             <span className="text-sm">
               Sign in to like videos, comment, and subscribe.
@@ -156,14 +162,14 @@ const SideBar = () => {
             <div className="cursor-pointer ml-1">How Hyper Local News Updates works</div>
             <div className="cursor-pointer ml-1">Test new features</div>
           </div>
-          <div className="px-4 py-2 text-gray-400"> &copy; 2023 Google LLC</div>
+          <div className="px-4 py-2 text-gray-400"> &copy; 2023 Google LLC</div> */}
         </div>
       </div>
       {
         isMobile() ? (
           <>
             {createPortal(
-              <div drawer-backdrop="" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-20" onClick={() => {dispatch(toggleMenu());}}></div>,
+              <div drawer-backdrop="" class="bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-20" onClick={() => { dispatch(toggleMenu()); }}></div>,
               document.body
             )}
           </>

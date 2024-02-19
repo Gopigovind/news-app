@@ -1,16 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { isMobile } from './helper';
 
-const TN = 'தமிழ் நாடு';
-const EN = 'Tamil Nadu';
-const HINDI = '';
 const appSlice = createSlice({
   name: 'app',
   initialState: {
     isMenuOpen: window.innerWidth >= 1300,
     isSideBarOpen: false,
-    locale: 'ta',
-    stateName: 'தமிழ் நாடு'
+    locale: localStorage.getItem('locale'),
+    stateName: localStorage.getItem('state'),
+    districtName: localStorage.getItem('district'),
+    showModal: false,
   },
   reducers: {
     //action : reducer function(state, actionPayload){}
@@ -22,13 +21,19 @@ const appSlice = createSlice({
     },
     updateLocale: (state, action) => {
       state.locale = action.payload;
-      state.stateName = action.payload === 'en' ? EN : TN
+      // state.stateName = action.payload === 'en' ? EN : TN
     },
     updateState: (state, action) => {
       state.stateName = action.payload;
+    },
+    updateDistrict: (state, action) => {
+      state.districtName = action.payload;
+    },
+    updateModal: (state, action) => {
+      state.showModal = action.payload;
     }
   },
 });
 
-export const { toggleMenu, toggleSideBar, updateLocale, updateState } = appSlice.actions;
+export const { toggleMenu, toggleSideBar, updateLocale, updateState, updateDistrict, updateModal } = appSlice.actions;
 export default appSlice.reducer;

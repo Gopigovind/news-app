@@ -4,9 +4,11 @@ import { MdKeyboardVoice } from "react-icons/md";
 import { RiVideoAddLine } from "react-icons/ri";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
+import { Listbox, Transition } from '@headlessui/react'
+import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import logo from "../assests/logo.jpg";
 import logo_dark_theme from "../assests/logo_dark_theme.webp";
-import { toggleMenu, toggleSideBar, updateState } from "../utils/appSlice";
+import { toggleMenu, toggleSideBar, updateModal, updateState } from "../utils/appSlice";
 import { BASE_URL } from "./../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
@@ -25,6 +27,8 @@ import { isMobile } from '../utils/helper'
 
 import mic_open from "../assests/mic_open.gif";
 import DropDownList from "./DropDownList";
+import { createPortal } from "react-dom";
+import Modal from "./Modal";
 
 export const RightSideComp = () => {
   const localeName = useSelector((store) => store.app.locale);
@@ -50,9 +54,13 @@ export const RightSideComp = () => {
   const changeLocale = (item) => {
     dispatch(updateLocale(item.code));
   }
+  const clickHandler = () => {
+    dispatch(updateModal(true));
+  }
+
 
   return (
-    <div className="right-menu flex items-center sm:ml-4 lg:ml-16 gap-5 p-2" style={{flexDirection: isMobile ? 'row-reverse' : ''}}>
+    <div className="right-menu flex items-center sm:ml-4 lg:ml-16 gap-5 p-2" style={{ flexDirection: isMobile ? 'row-reverse' : '' }}>
       <div className="toggle-dark-mode-switch  flex items-center gap-2">
         <label
           htmlFor="check"
@@ -73,7 +81,7 @@ export const RightSideComp = () => {
       </div>
 
       <div className="full cursor-pointer">
-        { localeData?.length > 0 && <DropDownList dataSource={localeData} value={localeName} onChange={changeLocale} /> }
+        {localeData?.length > 0 && <DropDownList dataSource={localeData} value={localeName} onChange={changeLocale} clickHandler={clickHandler} />}
       </div>
       <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
         <IoMdNotificationsOutline size="1.5rem" />
@@ -88,26 +96,30 @@ export const RightSideComp = () => {
 const LeftMenu = () => {
   const stateName = useSelector((store) => store.app.stateName);
   const localeName = useSelector((store) => store.app.locale);
+  const districtName = useSelector((store) => store.app.districtName);
   const dispatch = useDispatch();
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
 
 
-  const [stateData, setStateData] = useState([]);
+  // const [stateData, setStateData] = useState([]);
 
-  const stateApiHandler = async () => {
-    const response = await fetch(`${BASE_URL}/states?locale=${localeName}`);
-    const { data } = await response.json();
-    setStateData(data);
-  }
+  // const stateApiHandler = async () => {
+  //   const response = await fetch(`${BASE_URL}/states?locale=${localeName}`);
+  //   const { data } = await response.json();
+  //   setStateData(data);
+  // }
 
-  useEffect(() => {
-    stateApiHandler();
-  }, [localeName]);
+  // useEffect(() => {
+  //   stateApiHandler();
+  // }, [stateName]);
 
-  const changeState = (item) => {
-    dispatch(updateState(item?.attributes?.name));
+  // const changeState = (item) => {
+  //   dispatch(updateState(item?.attributes?.name));
+  // }
+  const clickHandler = () => {
+    dispatch(updateModal(true));
   }
 
   return (
@@ -133,7 +145,17 @@ const LeftMenu = () => {
         </a>
       </div>
       <div className="p-2 max-sm:hidden ">
-        <DropDownList dataSource={stateData} value={stateName} onChange={changeState} />
+        {/* <DropDownList dataSource={stateData} value={stateName} onChange={changeState} clickHandler={clickHandler} /> */}
+        <Listbox value={stateName}>
+          <Listbox.Button onClick={clickHandler} className="relative w-full cursor-default bg-white dark:bg-zinc-900 dark:text-white py-1.5 pl-3 pr-10 text-left text-gray-700 focus:outline-none sm:text-sm sm:leading-6">
+            <span className="flex items-center">
+              <span className="ml-3 block truncate">{districtName ? districtName : stateName}</span>
+            </span>
+            <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+              <ChevronDownIcon className="h-5 w-5 text-gray-700" aria-hidden="true" />
+            </span>
+          </Listbox.Button>
+        </Listbox>
       </div>
     </>
   )

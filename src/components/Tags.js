@@ -10,22 +10,25 @@ import { changeCategory } from "../utils/categorySlice";
 const Tags = ({tagHanler}) => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
   const stateName = useSelector((store) => store.app.stateName);
-  const [active, setActive] = useState('');
-  const location = useLocation();
-  let { state = stateName || 'தமிழ் நாடு', district = '', taluk = '', newsCategory = '' } = useParams();
+  const districtName = useSelector((store) => store.app.districtName);
+  let { state = stateName, district = districtName, taluk = '', newsCategory = '' } = useParams();
   newsCategory = newsCategory === state ? '' : newsCategory;
-  const handleSetHomeVideoByKeyword = (tag) => {
-    if (active !== tag) {
-      setActive(tag);
-      tagHanler && tagHanler(tag);
-    }
-  };
+ 
 
   state = decodeURIComponent(state);
   district = decodeURIComponent(district);
   taluk = decodeURIComponent(taluk);
   newsCategory = decodeURIComponent(newsCategory);
   const localeName = useSelector((store) => store.app.locale);
+  
+  const [active, setActive] = useState(district || '');
+
+  const handleSetHomeVideoByKeyword = (tag) => {
+    if (active !== tag) {
+      setActive(tag);
+      tagHanler && tagHanler(tag);
+    }
+  };
 
   const [tags, setTags] = useState({ path: '', items: [] });
   const districtHandler = async (state) => {
