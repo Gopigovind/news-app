@@ -4,23 +4,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { Listbox } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { BASE_URL } from "./../utils/constants";
-import { updateDistrict, updateLocale, updateState, updateModal } from "../utils/appSlice";
+import { updateDistrict, updateLocale, updateState, updateModal, updateTaluk } from "../utils/appSlice";
 
 
-export default function Modal({ isOpen = false }) {
+export default function Modal() {
     const [localeData, setLocaleData] = useState([]);
     const localeName = useSelector((store) => store.app.locale);
     const stateName = useSelector((store) => store.app.stateName);
     const districtName = useSelector((store) => store.app.districtName);
+    const talukName = useSelector((store) => store.app.talukName);
     const isShow = useSelector((store) => store.app.showModal);
     const dispatch = useDispatch();
     const cancelButtonRef = useRef(null);
-    const [open, setOpen] = useState(!(localeName && stateName && districtName) || isOpen);
+    const [open, setOpen] = useState(!(localeName && stateName));
 
     const [locale, setLocale] = useState(localeName);
     const [state, setState] = useState(stateName);
     const [districtData, setDistrictData] = useState([]);
     const [district, setDistrict] = useState(districtName);
+    const [taluk, setTaluk] = useState(talukName);
+    const [talukData, setTalukData] = useState([]);
 
     const localeApiHandler = async () => {
         const response = await fetch(`${BASE_URL}/i18n/locales`);
@@ -61,32 +64,49 @@ export default function Modal({ isOpen = false }) {
     }
     const changeDistrict = (item) => {
         setDistrict(item?.attributes?.name);
+        setTaluk('');
+        localStorage.removeItem('taluk');
     }
     const districtHandler = async () => {
         const response = await fetch(`${BASE_URL}/districts?locale=${locale}&fields[0]=name&populate[state][fields][0]=name&filters[state][name][$in][0]=${state}`);
         const { data } = await response.json();
         setDistrictData(data);
-      }
-    
-      useEffect(() => {
+    }
+
+    useEffect(() => {
         districtHandler();
     }, [state]);
 
     const clickHandler = () => {
-        if (state && locale && district) {
+        if (state && locale) {
             localStorage.setItem('locale', locale);
             dispatch(updateLocale(locale));
             localStorage.setItem('state', state);
             dispatch(updateState(state));
             localStorage.setItem('district', district);
             dispatch(updateDistrict(district));
+            localStorage.setItem('taluk', taluk);
+            dispatch(updateTaluk(taluk));
             setOpen(false);
         }
     }
-
     useEffect(() => {
         dispatch(updateModal(open));
     }, [open]);
+
+    const talukHandler = async () => {
+        const response = await fetch(`${BASE_URL}/taluks?locale=${locale}&fields[0]=name&populate[state][fields][0]=name&populate[district][fields][0]=name&filters[district][name][$in][0]=${district}`);
+        const { data } = await response.json();
+        setTalukData(data);
+    };
+
+    useEffect(() => {
+        talukHandler();
+    }, [district]);
+
+    const changeTaluk = (item) => {
+        setTaluk(item?.attributes?.name);
+    }
 
     return (
         <Transition.Root show={open} as={Fragment}>
@@ -114,11 +134,11 @@ export default function Modal({ isOpen = false }) {
                             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
-                            <Dialog.Panel className="relative transform rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full max-w-md">
-                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                            <Dialog.Panel className="dark:bg-zinc-800 dark:text-white relative transform rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                     <div className="sm:items-start">
                                         <div className="mt-3 sm:ml-4 sm:mt-0 sm:text-left">
-                                            <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                                            <Dialog.Title as="h3" className="dark:bg-zinc-800 dark:text-white text-base font-semibold leading-6 text-gray-900">
                                                 <span>Language or region of interest</span>
                                             </Dialog.Title>
                                             <div className="mt-2">
@@ -128,7 +148,7 @@ export default function Modal({ isOpen = false }) {
                                         {
                                             (locale && stateData?.length > 0) && (
                                                 <div className="mt-3 sm:ml-4 sm:mt-0 sm:text-left">
-                                                    <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                                                    <Dialog.Title as="h3" className="dark:bg-zinc-800 dark:text-white text-base font-semibold leading-6 text-gray-900">
                                                         <span>Select the state</span>
                                                     </Dialog.Title>
                                                     <div className="mt-2">
@@ -140,8 +160,8 @@ export default function Modal({ isOpen = false }) {
                                         {
                                             (state && districtData?.length > 0) && (
                                                 <div className="mt-3 sm:ml-4 sm:mt-0 sm:text-left">
-                                                    <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                                                        <span>Select the district</span>
+                                                    <Dialog.Title as="h3" className="dark:bg-zinc-800 dark:text-white text-base font-semibold leading-6 text-gray-900">
+                                                        <span>Select the district(optional)</span>
                                                     </Dialog.Title>
                                                     <div className="mt-2">
                                                         <ModalDDL placeholder='Select the district' dataSource={districtData} value={district} onChange={changeDistrict} />
@@ -149,23 +169,27 @@ export default function Modal({ isOpen = false }) {
                                                 </div>
                                             )
                                         }
+                                        {
+                                            (district && talukData?.length > 0) && (
+                                                <div className="mt-3 sm:ml-4 sm:mt-0 sm:text-left">
+                                                    <Dialog.Title as="h3" className="dark:bg-zinc-800 dark:text-white text-base font-semibold leading-6 text-gray-900">
+                                                        <span>Select the Taluk(optional)</span>
+                                                    </Dialog.Title>
+                                                    <div className="mt-2">
+                                                        <ModalDDL placeholder='Select the taluk' dataSource={talukData} value={taluk} onChange={changeTaluk} />
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                 </div>
-                                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                <div className="dark:bg-zinc-800 dark:text-white px-4 py-3 justify-center sm:flex sm:flex-row-reverse sm:px-6">
                                     <button
                                         type="button"
-                                        className={`${!(state && locale && district) ? 'opacity-50 cursor-not-allowed' : ''}inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto`}
+                                        className={`${!(state && locale) ? 'opacity-50 cursor-not-allowed' : ''} dark:bg-gray-500 dark:text-white inline-flex w-full justify-center rounded-md bg-gray-200 hover:bg-gray-400 px-3 py-2 text-sm font-semibold text-gray-950 shadow-sm sm:ml-3 sm:w-auto`}
                                         onClick={clickHandler}
                                     >
                                         Update
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                        onClick={() => setOpen(false)}
-                                        ref={cancelButtonRef}
-                                    >
-                                        Cancel
                                     </button>
                                 </div>
                             </Dialog.Panel>
@@ -202,7 +226,7 @@ function ModalDDL({ dataSource, value, onChange, placeholder }) {
             {({ open }) => (
                 <>
                     <div className="relative mt-2">
-                        <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
+                        <Listbox.Button className="dark:bg-zinc-800 dark:text-white relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 sm:text-sm sm:leading-6">
                             <span className="flex items-center">
                                 <span className="ml-3 block truncate">{selected?.attributes?.name || selected?.name || placeholder}</span>
                             </span>
@@ -218,7 +242,7 @@ function ModalDDL({ dataSource, value, onChange, placeholder }) {
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                         >
-                            <Listbox.Options className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            <Listbox.Options className="dark:bg-zinc-800 dark:text-white dark:border absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                 {dataSource?.map((item) => (
                                     <Listbox.Option
                                         key={item.id}

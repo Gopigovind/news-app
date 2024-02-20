@@ -101,6 +101,7 @@ const LeftMenu = () => {
   const stateName = useSelector((store) => store.app.stateName);
   const localeName = useSelector((store) => store.app.locale);
   const districtName = useSelector((store) => store.app.districtName);
+  const talukName = useSelector((store) => store.app.talukName);
   const dispatch = useDispatch();
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
@@ -153,7 +154,7 @@ const LeftMenu = () => {
         <Listbox value={stateName}>
           <Listbox.Button onClick={clickHandler} className="cursor-pointer relative w-full bg-white dark:bg-zinc-900 dark:text-white py-1.5 pl-3 pr-10 text-left text-gray-700 focus:outline-none sm:text-sm sm:leading-6">
             <span className="flex items-center">
-              <span className="ml-3 block truncate">{districtName ? districtName : stateName}</span>
+              <span className="ml-3 block truncate">{talukName || districtName || stateName}</span>
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
               <ChevronDownIcon className="h-5 w-5 text-gray-700" aria-hidden="true" />

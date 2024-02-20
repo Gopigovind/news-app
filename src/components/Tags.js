@@ -11,7 +11,8 @@ const Tags = ({tagHanler}) => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
   const stateName = useSelector((store) => store.app.stateName);
   const districtName = useSelector((store) => store.app.districtName);
-  let { state = stateName, district = districtName, taluk = '', newsCategory = '' } = useParams();
+  const talukName = useSelector((store) => store.app.talukName);
+  let { state = stateName, district = districtName, taluk = talukName, newsCategory = '' } = useParams();
   newsCategory = newsCategory === state ? '' : newsCategory;
  
 

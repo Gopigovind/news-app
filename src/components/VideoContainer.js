@@ -16,9 +16,10 @@ const VideoContainer = () => {
   const stateName = useSelector((store) => store.app.stateName);
   const localeName = useSelector((store) => store.app.locale);
   const districtName = useSelector((store) => store.app.districtName);
+  const talukName = useSelector((store) => store.app.talukName);
   const dispatch = useDispatch();
   const location = useLocation();
-  let {state= stateName, district=districtName, taluk='', newsCategory=''} = useParams();
+  let {state= stateName, district=districtName, taluk=talukName, newsCategory=''} = useParams();
   
 
   let date = new Date();
