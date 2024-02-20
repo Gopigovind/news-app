@@ -84,7 +84,7 @@ const Tags = ({tagHanler}) => {
   return (
     <>
       {
-        !newsCategory ? (
+        !newsCategory && !taluk ? (
           <div
             className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2`}
           >
