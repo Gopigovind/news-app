@@ -66,7 +66,7 @@ const Tags = ({tagHanler}) => {
   }
 
   useEffect(() => {
-    if (!newsCategory) {
+    if (!newsCategory && !taluk) {
       handleScroll("tags-wrapper");
     }
   }, []);
