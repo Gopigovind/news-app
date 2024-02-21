@@ -62,7 +62,10 @@ const SideBarExpanded = () => {
             />
           </button>
           <div className="logo cursor-pointer flex items-center ">
-            <a href="/">
+            <a href="/" onClick={() => {
+              localStorage.removeItem('district');
+              localStorage.removeItem('taluk');
+            }}>
               <img
                 src={theme === "light" ? logo_light_theme : logo_dark_theme}
                 alt="logo"
