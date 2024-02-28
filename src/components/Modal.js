@@ -1,6 +1,7 @@
 import { Fragment, useRef, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useDispatch, useSelector } from "react-redux";
+import {useNavigate} from 'react-router-dom';
 import { Listbox } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { BASE_URL } from "./../utils/constants";
@@ -15,6 +16,7 @@ export default function Modal() {
     const talukName = useSelector((store) => store.app.talukName);
     const isShow = useSelector((store) => store.app.showModal);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const cancelButtonRef = useRef(null);
     const [open, setOpen] = useState(!(localeName && stateName));
 
@@ -88,6 +90,9 @@ export default function Modal() {
             localStorage.setItem('taluk', taluk);
             dispatch(updateTaluk(taluk));
             setOpen(false);
+            if (window.location.pathname !== '/') {
+                navigate('/');
+            }
         }
     }
     useEffect(() => {

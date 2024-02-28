@@ -4,7 +4,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
-import SideBarExpanded from "./SideBarExpanded";
 import { BASE_URL } from "./../utils/constants";
 import VideoMetaData from "./VideoMetaData";
 import Comments from "./Comments";
