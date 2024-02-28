@@ -5,9 +5,6 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { BASE_URL } from "./../utils/constants";
-import VideoMetaData from "./VideoMetaData";
-import Comments from "./Comments";
-import VideoSuggestions from "./VideoSuggestions";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../utils/appSlice";
 import { isMobile } from "../utils/helper";
@@ -83,19 +80,6 @@ const WatchPage = () => {
   }
 
 
-
-  const handleSummaryButtonClick = async ()=>{
-    // const text = `Summarize the YouTube video in Points and in details\nTitle: ${videoDetails?.snippet?.title} by ${videoDetails?.snippet?.channelTitle}`;
-
-    // const copyToClipboard = async (str) => {
-    //   if (navigator && navigator.clipboard && navigator.clipboard.writeText)
-    //     return await navigator.clipboard.writeText(str);
-    //   return Promise.reject("The Clipboard API is not available.");
-    // };
-    // await copyToClipboard(text);
-    // showPopup();
-    //   window.open("https://chat.openai.com/chat", "_blank");
-  }
 
   const dispatch = useDispatch();
   const isSideBarOpen = useSelector((store) => store.app.isSideBarOpen);

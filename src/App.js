@@ -6,7 +6,6 @@ import Header from "./components/Header";
 import BreadCrum from "./components/BreadCrum";
 import MainContainer from "./components/MainContainer";
 import NewsMainContainer from './components/NewsMainContainer';
-import Search from "./components/Search";
 import WatchPage from "./components/WatchPage";
 import store from "./utils/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -15,18 +14,6 @@ import ThemeContext from "./utils/ThemeContext";
 import { useEffect, useState } from "react";
 import { isMobile } from "./utils/helper";
 
-/* 
-  Header
-    Sidebar
-      MenuItem
-  Body
-    MainContainer
-    Tag
-    VideoContainer
-      VideoCard
-
-
-*/
 export const queryClient = new QueryClient();
 
 
@@ -52,10 +39,6 @@ export const appRouter = createBrowserRouter([
           {
             path: "/:state?/:district?/:taluk?/:slug?",
             element: <NewsMainContainer />,
-          },
-          {
-            path: "results",
-            element: <Search />,
           },
         ],
       },

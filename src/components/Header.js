@@ -14,8 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
 import { useContext, useEffect, useState, useRef } from "react";
 import useDebounce from "../utils/useDebounce";
-import { YOUTUBE_SEARCH_SUGGESTION_API_URL } from "../utils/constants";
-import SuggestionDropDown from "./SuggestionDropDown";
 import useClickOutside from "./../utils/useClickOutside";
 import { cacheResults } from "../utils/searchSlice";
 import ThemeContext from "../utils/ThemeContext";
@@ -305,15 +303,6 @@ const Header = () => {
             <MdKeyboardVoice size="1.5rem" />
           )}
         </div>
-        {/* {isListening && <VoiceSearch text={text}/>} */}
-        {/* {!loading && (
-          <SuggestionDropDown
-            suggestions={suggestions}
-            setLoading={setLoading}
-            setSuggestions={setSuggestions}
-            setSearchQuery={setSearchQuery}
-          />
-        )} */}
       </div>
       {!isMobile &&
         <RightSideComp />
