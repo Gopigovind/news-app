@@ -124,11 +124,12 @@ const LeftMenu = () => {
   const clickHandler = () => {
     dispatch(updateModal(true));
   }
+  const category = useSelector((store) => store.newsCategory.category);
   
   const route = useLocation();
   const decodeUrl = decodeURIComponent(route.pathname);
   const splitPath = decodeUrl.split('/'); 
-  const pathName = splitPath[splitPath.length - 1];
+  const pathName = category.value ? '' : splitPath[splitPath.length - 1];
 
   return (
     <>

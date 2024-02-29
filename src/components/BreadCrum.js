@@ -1,14 +1,15 @@
 import React from "react";
 import { useLocation, Link, useParams } from 'react-router-dom';
+import { useSelector } from "react-redux";
 import { BsHouseDownFill } from "react-icons/bs";
 
 const BreadCrum = () => {
 
     const location = useLocation();
-
+    const category = useSelector((store) => store.newsCategory.category);
     const pathList = () => {
         const pathItem = decodeURIComponent(location.pathname)?.split('/').filter(item => item && (item !== 'news'));
-        return pathItem;
+        return category.value ? [] : pathItem;
     }
     const textEllipse = {
         whiteSpace: 'nowrap',

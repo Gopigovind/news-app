@@ -34,6 +34,7 @@ import { BASE_URL } from "./../utils/constants";
 import { toggleMenu } from "../utils/appSlice";
 import { Link, useLocation } from "react-router-dom";
 import { isMobile as mobileDevice } from "../utils/helper";
+import { changeCategory } from "../utils/categorySlice";
 
 const SideBar = () => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
@@ -41,7 +42,7 @@ const SideBar = () => {
   const breakpoint = 1024;
   const dispatch = useDispatch();
   const location = useLocation();
-  const [pathName, setPathName] = useState();
+  const [pathName, setPathName] = useState(location.pathname.split('/').length === 2 ? decodeURIComponent(location.pathname.split('/')[1]) : '');
   useEffect(() => {
     const checkisMobile = () => {
       if (isMenuOpen && window.innerWidth < breakpoint) {
@@ -80,13 +81,13 @@ const SideBar = () => {
     if (filterData?.length > 0)
     {
       filterData[0].attributes.isActive = true;
+      categoryName && dispatch(changeCategory({ type: 'CATEGORY', value: categoryName }));
       setNewsCategory(filterData[0]);
     }
   }
 
   useEffect(() => {
     getCategoryGroup();
-    // getNewsCategory();
   }, [localeName]);
 
   useEffect(() => {
@@ -115,14 +116,14 @@ const SideBar = () => {
           {
             categoryGroup.length > 0 && categoryGroup.map((category, index) => (
               <Link to={category.attributes?.isDefault ? '/' : category?.attributes?.name} key={index} data-id={category.id} onClick={()=> listHandler(category?.attributes?.name)}>
-                <div className={`${((pathName === (category.attributes?.isDefault ? '/' : category?.attributes?.name)) || category?.attributes.isActive) ? 'bg-gray-500' : ''} home px-4 flex py-2 items-center hover:bg-zinc-100 dark:hover:bg-zinc-700 w-full rounded-lg  cursor-pointer`}>
+                <div className={`home px-4 flex py-2 items-center hover:bg-zinc-100 dark:hover:bg-zinc-700 w-full rounded-lg  cursor-pointer`}>
                   {/* <MdHomeFilled size="1.5rem" className="mb-1 mr-4" /> */}
                   {
                     category.attributes?.image?.data?.attributes?.formats?.thumbnail?.url && (
-                      <img src={category.attributes?.image?.data?.attributes?.formats?.thumbnail?.url} className="mb-1 mr-4" style={{width: '1.5rem'}} />
+                      <img src={category.attributes?.image?.data?.attributes?.formats?.thumbnail?.url} className="mr-2" style={{width: '1.5rem'}} />
                     )
                   }
-                  <span className="">{category.attributes.name}</span>
+                  <span className={`${category?.attributes.isActive ? 'font-bold' : ''}`}>{category.attributes.name}</span>
                 </div>
               </Link>
             ))
@@ -171,18 +172,18 @@ const SideBar = () => {
     </>
   ) : (
     !mobileDevice && (
-      <div className="sidebar__closed pr-1 border-r dark:border-none flex flex-col text-xs w-18 items-center  h-[calc(100vh-4.625rem)] bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500">
+      <div className="sidebar__closed px-2 border-r dark:border-none flex flex-col text-xs w-18 items-center  h-[calc(100vh-4.625rem)] bg-white dark:bg-zinc-900 dark:text-white transition-all duration-500">
         {
             categoryGroup.length > 0 && categoryGroup.map((category, index) => (
               <Link className=" w-full" to={category.attributes?.isDefault ? '/' : category?.attributes?.name} key={index} data-id={category.id} onClick={()=> listHandler(category?.attributes?.name)}>
-                <div className={`${((pathName === (category.attributes?.isDefault ? '/' : category?.attributes?.name)) || category?.attributes.isActive) ? 'bg-gray-500' : ''} home py-4 flex flex-col items-center hover:bg-zinc-200 dark:hover:bg-zinc-700  w-full rounded-md`}>
+                <div className={`home py-4 flex flex-col items-center hover:bg-zinc-200 dark:hover:bg-zinc-700  w-full rounded-md`}>
                   {/* <MdHomeFilled size="1.5rem" className="mb-1 mr-4" /> */}
                   {
                     category.attributes?.image?.data?.attributes?.formats?.thumbnail?.url && (
-                      <img src={category.attributes?.image?.data?.attributes?.formats?.thumbnail?.url} className="mb-1 mr-4" style={{width: '1.5rem'}} />
+                      <img src={category.attributes?.image?.data?.attributes?.formats?.thumbnail?.url} style={{width: '1.5rem'}} />
                     )
                   }
-                  <span className="">{category.attributes.name}</span>
+                  <span className={`${(category?.attributes.isActive) ? 'font-bold' : ''}`}>{category.attributes.name}</span>
                 </div>
               </Link>
             ))
