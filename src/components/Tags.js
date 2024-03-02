@@ -12,14 +12,16 @@ const Tags = ({tagHanler}) => {
   const stateName = useSelector((store) => store.app.stateName);
   const districtName = useSelector((store) => store.app.districtName);
   const talukName = useSelector((store) => store.app.talukName);
-  let { state = stateName, district = districtName, taluk = talukName, newsCategory = '' } = useParams();
+  let { state = stateName, district = districtName, taluk = talukName, mainCategory='', newsCategory = '' } = useParams();
   newsCategory = newsCategory === state ? '' : newsCategory;
+  mainCategory = mainCategory === state ? '' : mainCategory;
  
 
   state = decodeURIComponent(state);
   district = decodeURIComponent(district);
   taluk = decodeURIComponent(taluk);
   newsCategory = decodeURIComponent(newsCategory);
+  mainCategory = decodeURIComponent(mainCategory);
   const localeName = useSelector((store) => store.app.locale);
   
   const [active, setActive] = useState(district || '');
@@ -66,7 +68,7 @@ const Tags = ({tagHanler}) => {
   }
 
   useEffect(() => {
-    if (!newsCategory && !taluk) {
+    if (!(newsCategory || mainCategory) && !taluk) {
       handleScroll("tags-wrapper");
     }
   }, []);
@@ -84,7 +86,7 @@ const Tags = ({tagHanler}) => {
   return (
     <>
       {
-        !newsCategory && !taluk ? (
+        !(newsCategory || mainCategory) && !taluk ? (
           <div
             className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2`}
           >

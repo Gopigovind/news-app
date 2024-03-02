@@ -19,16 +19,18 @@ const VideoContainer = () => {
   const talukName = useSelector((store) => store.app.talukName);
   const dispatch = useDispatch();
   const location = useLocation();
-  let {state= stateName, district=districtName, taluk=talukName, newsCategory=''} = useParams();
+  let {state= stateName, district=districtName, taluk=talukName, mainCategory='', newsCategory=''} = useParams();
   
 
   let date = new Date();
   newsCategory = newsCategory === state ? '' : newsCategory;
+  mainCategory = mainCategory === state ? '' : mainCategory;
   
   state = decodeURIComponent(state);
   district = decodeURIComponent(district);
   taluk = decodeURIComponent(taluk);
   newsCategory = decodeURIComponent(newsCategory);
+  mainCategory = decodeURIComponent(mainCategory);
 
   // eslint-disable-next-line
   date = encodeURIComponent(date.toJSON());
@@ -44,7 +46,7 @@ const VideoContainer = () => {
     try {
       nextPageToken = nextPageToken || 0;
       const paginationUrl = `&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
-      const pathUrl = newsCategory ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[news_category][[name]][$contains][0]=${newsCategory}${paginationUrl}` 
+      const pathUrl = mainCategory ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[category_group][name][$contains][0]=${mainCategory}${newsCategory ? `&filters[news_category][name][$contains][0]=${newsCategory}` : ''}${paginationUrl}` 
       : location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}${paginationUrl}`;
       const response = await fetch(pathUrl);
       const data = await response.json();

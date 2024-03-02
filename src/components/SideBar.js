@@ -32,7 +32,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BASE_URL } from "./../utils/constants";
 import { toggleMenu } from "../utils/appSlice";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { isMobile as mobileDevice } from "../utils/helper";
 import { changeCategory } from "../utils/categorySlice";
 
@@ -42,6 +42,16 @@ const SideBar = () => {
   const breakpoint = 1024;
   const dispatch = useDispatch();
   const location = useLocation();
+  const stateName = useSelector((store) => store.app.stateName);
+  const localeName = useSelector((store) => store.app.locale);
+  const districtName = useSelector((store) => store.app.districtName);
+  const talukName = useSelector((store) => store.app.talukName);
+  let {state= stateName, district=districtName, taluk=talukName, mainCategory='', newsCategory=''} = useParams();
+  
+  newsCategory = newsCategory === state ? '' : newsCategory;
+  mainCategory = mainCategory === state ? '' : mainCategory;
+  newsCategory = decodeURIComponent(newsCategory);
+  mainCategory = decodeURIComponent(mainCategory);
   const [pathName, setPathName] = useState(location.pathname.split('/').length === 2 ? decodeURIComponent(location.pathname.split('/')[1]) : '');
   useEffect(() => {
     const checkisMobile = () => {
@@ -55,24 +65,23 @@ const SideBar = () => {
   const isMobile = () => window.innerWidth <= 1300;
 
   const [categoryGroup, setCategoryGroup] = useState([]);
-  const [newsCategory, setNewsCategory] = useState();
-  const localeName = useSelector((store) => store.app.locale);
+  const [newsCategories, setNewsCategories] = useState();
 
   const getCategoryGroup = async () => {
     const response = await fetch(`${BASE_URL}/category-groups?locale=${localeName}&populate=*&sort=id`);
     const { data } = await response.json();
     setCategoryGroup(data);
     const urlName = location.pathname.split('/').length === 2 ? decodeURIComponent(location.pathname.split('/')[1]) : '';
-    listHandler(urlName, data);
+    listHandler(urlName, data, true);
   }
 
   const getNewsCategory = async () => {
     const response = await fetch(`${BASE_URL}/news-categories?locale=${localeName}&sort=id`);
     const { data } = await response.json();
-    setNewsCategory(data);
+    setNewsCategories(data);
   }
 
-  const listHandler = (categoryName, data=null) => {
+  const listHandler = (categoryName, data=null, isInitial = false) => {
     const itemData = data || categoryGroup;
     const filterData = itemData.filter((item) => {
       item.attributes.isActive = false;
@@ -80,9 +89,11 @@ const SideBar = () => {
     });
     if (filterData?.length > 0)
     {
-      filterData[0].attributes.isActive = true;
-      categoryName && dispatch(changeCategory({ type: 'CATEGORY', value: categoryName }));
-      setNewsCategory(filterData[0]);
+      filterData[0].attributes.isActive = isInitial ? !!(mainCategory || newsCategory) : true;
+      categoryName && dispatch(changeCategory({ type: 'CATEGORY', value: categoryName.replace('/','') }));
+      setNewsCategories(filterData[0]);
+    } else {
+      dispatch(changeCategory({ type: 'CATEGORY', value: '' }));
     }
   }
 
@@ -115,7 +126,7 @@ const SideBar = () => {
         <div className="first-part flex pl-2 pr-6  pb-4 flex-col text-sm w-[15rem] ">
           {
             categoryGroup.length > 0 && categoryGroup.map((category, index) => (
-              <Link to={category.attributes?.isDefault ? '/' : category?.attributes?.name} key={index} data-id={category.id} onClick={()=> listHandler(category?.attributes?.name)}>
+              <Link to={category?.attributes?.name} key={index} data-id={category.id} onClick={()=> listHandler(category?.attributes?.name)}>
                 <div className={`home px-4 flex py-2 items-center hover:bg-zinc-100 dark:hover:bg-zinc-700 w-full rounded-lg  cursor-pointer`}>
                   {/* <MdHomeFilled size="1.5rem" className="mb-1 mr-4" /> */}
                   {
@@ -129,22 +140,21 @@ const SideBar = () => {
             ))
           }
           {
-            newsCategory && (
+            newsCategories && (
               <>
                 <div className="pt-3 border-b border-zinc-200 w-full"></div>
                 <div className="pt-4 pl-4 mb-2">
-                  <span className="text-base font-semibold">{newsCategory?.attributes?.label}</span>
+                  <span className="text-base font-semibold">{newsCategories?.attributes?.label}</span>
                 </div>
               </>
             )
           }
           {
-            newsCategory?.attributes?.headline_categories?.data?.length > 0 && newsCategory?.attributes?.headline_categories?.data.map((newsCat) => (
+            newsCategories?.attributes?.headline_categories?.data?.length > 0 && newsCategories?.attributes?.headline_categories?.data.map((newsCat) => (
               <Link
-                onClick={() => { dispatch(toggleMenu()); }}
                 state={{ type: 'CATEGORY', value: newsCat.id, item: newsCat }}
                 to={{
-                  pathname: `/${newsCat.attributes.name}`,
+                  pathname: `${mainCategory ? `/${mainCategory}` : ''}/${newsCat.attributes.name}`,
                   state: newsCat
                 }}
               >

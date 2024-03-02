@@ -31,9 +31,12 @@ export const appRouter = createBrowserRouter([
             path: "/",
             element: <NewsMainContainer />,
           },
-
           {
-            path: "/:newsCategory",
+            path: "/:mainCategory",
+            element: <NewsMainContainer />,
+          },
+          {
+            path: "/:mainCategory/:newsCategory",
             element: <NewsMainContainer />,
           },
           {

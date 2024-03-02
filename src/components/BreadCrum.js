@@ -7,9 +7,14 @@ const BreadCrum = () => {
 
     const location = useLocation();
     const category = useSelector((store) => store.newsCategory.category);
+    const stateName = useSelector((store) => store.app.stateName);
+  const localeName = useSelector((store) => store.app.locale);
+  const districtName = useSelector((store) => store.app.districtName);
+  const talukName = useSelector((store) => store.app.talukName);
+  let {state= stateName, district=districtName, taluk=talukName, mainCategory='', newsCategory=''} = useParams();
     const pathList = () => {
         const pathItem = decodeURIComponent(location.pathname)?.split('/').filter(item => item && (item !== 'news'));
-        return category.value ? [] : pathItem;
+        return (mainCategory || newsCategory) ? [] : pathItem;
     }
     const textEllipse = {
         whiteSpace: 'nowrap',
