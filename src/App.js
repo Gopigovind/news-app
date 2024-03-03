@@ -36,7 +36,7 @@ export const appRouter = createBrowserRouter([
             element: <NewsMainContainer />,
           },
           {
-            path: "/:mainCategory/:newsCategory",
+            path: "/:mainCategory/:state?/:district?/:taluk?/:slug?",
             element: <NewsMainContainer />,
           },
           {

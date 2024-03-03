@@ -32,7 +32,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BASE_URL } from "./../utils/constants";
 import { toggleMenu } from "../utils/appSlice";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { isMobile as mobileDevice } from "../utils/helper";
 import { changeCategory } from "../utils/categorySlice";
 
@@ -42,15 +42,14 @@ const SideBar = () => {
   const breakpoint = 1024;
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const stateName = useSelector((store) => store.app.stateName);
   const localeName = useSelector((store) => store.app.locale);
   const districtName = useSelector((store) => store.app.districtName);
   const talukName = useSelector((store) => store.app.talukName);
-  let {state= stateName, district=districtName, taluk=talukName, mainCategory='', newsCategory=''} = useParams();
+  let {state= stateName, district=districtName, taluk=talukName, mainCategory=''} = useParams();
   
-  newsCategory = newsCategory === state ? '' : newsCategory;
   mainCategory = mainCategory === state ? '' : mainCategory;
-  newsCategory = decodeURIComponent(newsCategory);
   mainCategory = decodeURIComponent(mainCategory);
   const [pathName, setPathName] = useState(location.pathname.split('/').length === 2 ? decodeURIComponent(location.pathname.split('/')[1]) : '');
   useEffect(() => {
@@ -89,9 +88,11 @@ const SideBar = () => {
     });
     if (filterData?.length > 0)
     {
-      filterData[0].attributes.isActive = isInitial ? !!(mainCategory || newsCategory) : true;
-      categoryName && dispatch(changeCategory({ type: 'CATEGORY', value: categoryName.replace('/','') }));
+      filterData[0].attributes.isActive = isInitial ? !!(mainCategory) : true;
+      isInitial && !(location.pathname.replace('/', '')) && filterData[0].attributes.isDefault && navigate(filterData[0].attributes.name);
       setNewsCategories(filterData[0]);
+      localStorage.setItem('mainCategory', filterData[0].attributes.name);
+      dispatch(changeCategory({ type: 'CATEGORY', value: ''}));
     } else {
       dispatch(changeCategory({ type: 'CATEGORY', value: '' }));
     }
@@ -117,6 +118,7 @@ const SideBar = () => {
 
   const categoryHandler = (newsCat) => {
     // dispatch(changeCategory({ type: 'CATEGORY', value: newsCat.id }));
+    dispatch(changeCategory({ type: 'CATEGORY', value: newsCat.attributes.name}));
   }
 
 
@@ -154,7 +156,7 @@ const SideBar = () => {
               <Link
                 state={{ type: 'CATEGORY', value: newsCat.id, item: newsCat }}
                 to={{
-                  pathname: `${mainCategory ? `/${mainCategory}` : ''}/${newsCat.attributes.name}`,
+                  pathname: `${mainCategory ? `/${mainCategory}` : ''}`,
                   state: newsCat
                 }}
               >

@@ -19,17 +19,15 @@ const VideoContainer = () => {
   const talukName = useSelector((store) => store.app.talukName);
   const dispatch = useDispatch();
   const location = useLocation();
-  let {state= stateName, district=districtName, taluk=talukName, mainCategory='', newsCategory=''} = useParams();
+  let {state= stateName, district=districtName, taluk=talukName, mainCategory=''} = useParams();
   
 
   let date = new Date();
-  newsCategory = newsCategory === state ? '' : newsCategory;
   mainCategory = mainCategory === state ? '' : mainCategory;
   
   state = decodeURIComponent(state);
   district = decodeURIComponent(district);
   taluk = decodeURIComponent(taluk);
-  newsCategory = decodeURIComponent(newsCategory);
   mainCategory = decodeURIComponent(mainCategory);
 
   // eslint-disable-next-line
@@ -46,8 +44,9 @@ const VideoContainer = () => {
     try {
       nextPageToken = nextPageToken || 0;
       const paginationUrl = `&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
-      const pathUrl = mainCategory ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[category_group][name][$contains][0]=${mainCategory}${newsCategory ? `&filters[news_category][name][$contains][0]=${newsCategory}` : ''}${paginationUrl}` 
-      : location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}${paginationUrl}`;
+      const stateDistrictPath = `${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}`;
+      const pathUrl = mainCategory ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[category_group][name][$contains][0]=${mainCategory}${decodeURIComponent(category.value) ? `&filters[news_category][name][$contains][0]=${decodeURIComponent(category.value)}` : ''}${stateDistrictPath}${paginationUrl}` 
+      : location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${stateDistrictPath}${paginationUrl}`;
       const response = await fetch(pathUrl);
       const data = await response.json();
       return data;
@@ -58,9 +57,9 @@ const VideoContainer = () => {
 
   let { data, isLoading, fetchNextPage, isFetchingNextPage, isSuccess } =
     useInfiniteQuery(
-      ["home-videos", localeName, category, state, district, taluk, newsCategory, location.pathname],
+      ["home-videos", mainCategory, localeName, category, state, district, taluk, decodeURIComponent(category.value), decodeURIComponent(location.pathname)],
       ({ pageParam = null }) =>
-        (category?.type !== "SEARCH" && (state || district || taluk || newsCategory || location.pathname))
+        (category?.type !== "SEARCH" && (state || district || taluk || decodeURIComponent(category.value) || decodeURIComponent(location.pathname) || mainCategory))
           ? getVideos(pageParam)
           : searchVideoByKeyword(category, pageParam),
       {
@@ -123,14 +122,15 @@ const VideoContainer = () => {
   const [path, setPath] = useState('')
   
 useEffect(() => {
-  if (state || district || taluk) {
-    dispatch(changeCategory({ type: decodeURIComponent(location.pathname), value: decodeURIComponent(location.pathname) }));
+  if (state || district || taluk || mainCategory) {
+    // dispatch(changeCategory({ type: decodeURIComponent(location.pathname), value: decodeURIComponent(location.pathname) }));
     const statePath = state ? `/${state}` : '';
     const districtPath = district ? `/${district}` : '';
     const talukpath = taluk ? `/${taluk}` : '';
-    setPath(`/news${statePath}${districtPath}${talukpath}`);
+    const localPath = localStorage.getItem('mainCategory') ? `/${localStorage.getItem('mainCategory')}` : '';
+    setPath(`/news${mainCategory ? `/${mainCategory}` : localPath}${statePath}${districtPath}${talukpath}`);
   }
-}, [state, district, taluk]);
+}, [state, district, taluk, mainCategory]);
 
   // useEffect(() => {
   //   if (onScreen) {

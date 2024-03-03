@@ -12,15 +12,13 @@ const Tags = ({tagHanler}) => {
   const stateName = useSelector((store) => store.app.stateName);
   const districtName = useSelector((store) => store.app.districtName);
   const talukName = useSelector((store) => store.app.talukName);
-  let { state = stateName, district = districtName, taluk = talukName, mainCategory='', newsCategory = '' } = useParams();
-  newsCategory = newsCategory === state ? '' : newsCategory;
+  let { state = stateName, district = districtName, taluk = talukName, mainCategory='' } = useParams();
   mainCategory = mainCategory === state ? '' : mainCategory;
  
 
   state = decodeURIComponent(state);
   district = decodeURIComponent(district);
   taluk = decodeURIComponent(taluk);
-  newsCategory = decodeURIComponent(newsCategory);
   mainCategory = decodeURIComponent(mainCategory);
   const localeName = useSelector((store) => store.app.locale);
   
@@ -68,7 +66,7 @@ const Tags = ({tagHanler}) => {
   }
 
   useEffect(() => {
-    if (!(newsCategory || mainCategory) && !taluk) {
+    if (!taluk) {
       handleScroll("tags-wrapper");
     }
   }, []);
@@ -86,7 +84,7 @@ const Tags = ({tagHanler}) => {
   return (
     <>
       {
-        !(newsCategory || mainCategory) && !taluk ? (
+        !taluk ? (
           <div
             className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2`}
           >
@@ -98,7 +96,7 @@ const Tags = ({tagHanler}) => {
                     replace
                     state={{ type: '', value: tag.id, item: tag }}
                     to={{
-                      pathname: `${tags.path}/${tag.attributes.name}`,
+                      pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}${tags.path}/${tag.attributes.name}`,
                       state: tag,
                     }}
                   >

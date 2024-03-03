@@ -12,6 +12,7 @@ import BreadCrum from "./BreadCrum";
 import SideBar from './SideBar';
 import { useQuery } from "@tanstack/react-query";
 import news_default from "../assests/news-default.png";
+import Modal from './Modal';
 
 const MediaElement = ({ articleCard }) => {
 
@@ -126,7 +127,7 @@ const WatchPage = () => {
   return (isLoading || !articleCard) ? null : (
     <>
     {isMobile && <><SideBar /><BreadCrum /></>}
-    
+    <Modal />
   <div className="max-w-6xl mx-auto">
   <article>
       <section className={`flex flex-col lg:flex-row pb-24 py-4 px-${isMobile ? 2 : 0} lg:px-10 dark:bg-zinc-900 dark:text-white`}>

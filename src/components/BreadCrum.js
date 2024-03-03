@@ -14,7 +14,7 @@ const BreadCrum = () => {
   let {state= stateName, district=districtName, taluk=talukName, mainCategory='', newsCategory=''} = useParams();
     const pathList = () => {
         const pathItem = decodeURIComponent(location.pathname)?.split('/').filter(item => item && (item !== 'news'));
-        return (mainCategory || newsCategory) ? [] : pathItem;
+        return pathItem;
     }
     const textEllipse = {
         whiteSpace: 'nowrap',
@@ -26,7 +26,7 @@ const BreadCrum = () => {
         <>
             {
                 pathList()?.length > 0 ? (
-                    <nav aria-label="Breadcrumb" className="dark:bg-zinc-800 dark:text-white">
+                    <nav aria-label="Breadcrumb" className="shadow-sm relative dark:bg-zinc-800 dark:text-white">
                         <ol role="list" className="flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8 py-4">
                             <li>
                                 <div className="flex items-center">
