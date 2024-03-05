@@ -1,27 +1,33 @@
 import { tags } from "../utils/constants";
 // import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/swiper-bundle.css';
+import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
 import { BASE_URL } from "./../utils/constants";
 import { handleScroll, isMobile } from "../utils/helper";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link, useParams } from 'react-router-dom';
 import { changeCategory } from "../utils/categorySlice";
 
-const Tags = ({tagHanler}) => {
+const Tags = ({ tagHanler }) => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
   const stateName = useSelector((store) => store.app.stateName);
   const districtName = useSelector((store) => store.app.districtName);
   const talukName = useSelector((store) => store.app.talukName);
-  let { state = stateName, district = districtName, taluk = talukName, mainCategory='' } = useParams();
+  let { state = stateName, district = districtName, taluk = talukName, mainCategory = '' } = useParams();
   mainCategory = mainCategory === state ? '' : mainCategory;
- 
+
 
   state = decodeURIComponent(state);
   district = decodeURIComponent(district);
   taluk = decodeURIComponent(taluk);
   mainCategory = decodeURIComponent(mainCategory);
   const localeName = useSelector((store) => store.app.locale);
-  
+
   const [active, setActive] = useState(district || '');
 
   const handleSetHomeVideoByKeyword = (tag) => {
@@ -89,30 +95,54 @@ const Tags = ({tagHanler}) => {
             className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2`}
           >
             <div className="tags-wrapper flex w-full overflow-x-hidden overflow-y-hidden ">
-              {tags?.items?.map((tag, index) => {
-                return (
-
-                  <Link
-                    replace
-                    state={{ type: '', value: tag.id, item: tag }}
-                    to={{
-                      pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}${tags.path}/${tag.attributes.name}`,
-                      state: tag,
-                    }}
-                  >
-                    <button
-                      className={`tag  px-3 w-fit py-2 mx-2 cursor-pointer rounded-lg ${active === tag
-                        ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
-                        : " bg-gray-100  dark:text-white dark:bg-zinc-800"
-                        }`}
-                      key={index}
-                      onClick={() => handleSetHomeVideoByKeyword(tag)}
-                    >
-                      <span className="whitespace-nowrap">{tag.attributes.name}</span>
-                    </button>
-                  </Link>
-                );
-              })}
+              <Swiper
+                navigation={!isMobile} modules={[Navigation]}
+                spaceBetween={20}
+                breakpoints={{
+                  320: {
+                    slidesPerView: 2.5
+                  },
+                  480: {
+                    slidesPerView: 3.5
+                  },
+                  640: {
+                    slidesPerView: 4
+                  },
+                  768: {
+                    slidesPerView: 5
+                  },
+                  1024: {
+                    slidesPerView: 8.5,
+                  },
+                }}
+                className="mySwiper"
+              >
+                {tags?.items?.map((tag, index) => {
+                  return (
+                    <SwiperSlide>
+                      <Link
+                        replace
+                        state={{ type: '', value: tag.id, item: tag }}
+                        to={{
+                          pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}${tags.path}/${tag.attributes.name}`,
+                          state: tag,
+                        }}
+                      >
+                        <button
+                          className={`tag px-3 w-full py-2 cursor-pointer rounded-lg ${active === tag
+                            ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
+                            : " bg-gray-100  dark:text-white dark:bg-zinc-800"
+                            }`}
+                          key={index}
+                          onClick={() => handleSetHomeVideoByKeyword(tag)}
+                        >
+                          <span className="whitespace-nowrap">{tag.attributes.name}</span>
+                        </button>
+                      </Link>
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
             </div>
           </div>
         ) : null

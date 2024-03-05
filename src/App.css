@@ -76,19 +76,12 @@
   height: 100%;
 }
 
-.swiper-wrapper .swiper-slide {
-  text-align: center;
-  font-size: 18px;
-  background: #fff;
-  display: contents;
-  justify-content: center;
-  align-items: center;
-}
 
 .swiper.swiper-per-view {
   padding: 4px;
 }
-
+.tags-wrapper .swiper .swiper-button-next:after,
+.tags-wrapper .swiper .swiper-button-prev:after,
 .swiper.swiper-per-view .swiper-button-next:after,
 .swiper.swiper-per-view .swiper-button-prev:after {
   font-size: 30px;
