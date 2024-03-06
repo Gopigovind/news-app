@@ -84,10 +84,18 @@
 .tags-wrapper .swiper .swiper-button-prev:after,
 .swiper.swiper-per-view .swiper-button-next:after,
 .swiper.swiper-per-view .swiper-button-prev:after {
-  font-size: 30px;
+  font-size: 20px;
   font-weight: bold;
   color: #000;
 }
+.tags-wrapper .swiper .swiper-button-next.swiper-button-disabled,
+.tags-wrapper .swiper .swiper-button-prev.swiper-button-disabled {
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+
+.dark .tags-wrapper .swiper .swiper-button-next:after,
+.dark .tags-wrapper .swiper .swiper-button-prev:after,
 .dark .swiper.swiper-per-view .swiper-button-next:after,
 .dark .swiper.swiper-per-view .swiper-button-prev:after {
   color: #fff;
