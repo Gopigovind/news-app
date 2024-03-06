@@ -112,7 +112,7 @@ const Tags = ({ tagHanler }) => {
                     slidesPerView: 5
                   },
                   1024: {
-                    slidesPerView: 8.5,
+                    slidesPerView: 6.5,
                   },
                 }}
                 className="mySwiper"
@@ -129,7 +129,7 @@ const Tags = ({ tagHanler }) => {
                         }}
                       >
                         <button
-                          className={`tag px-3 w-full py-2 cursor-pointer rounded-lg ${active === tag
+                          className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${active === tag
                             ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
                             : " bg-gray-100  dark:text-white dark:bg-zinc-800"
                             }`}
