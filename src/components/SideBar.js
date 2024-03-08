@@ -115,9 +115,11 @@ const SideBar = () => {
     };
   }, [isMenuOpen, dispatch]);
 
+  const [subCategory, setSubCategory] = useState('');
   const categoryHandler = (newsCat) => {
     // dispatch(changeCategory({ type: 'CATEGORY', value: newsCat.id }));
     dispatch(changeCategory({ type: 'CATEGORY', value: newsCat.attributes.name}));
+    setSubCategory(newsCat.attributes.name);
   }
 
 
@@ -161,7 +163,7 @@ const SideBar = () => {
               >
                 <div data-id={newsCat.id} onClick={() => categoryHandler(newsCat)} className={`${newsCat.id === selector?.value ? 'bg-zinc-100' : ''} Trending py-2 px-4 flex items-center hover:bg-zinc-100 dark:hover:bg-zinc-700  w-full rounded-lg  cursor-pointer`}>
                   {/* <ImFire size="1.5rem" className="mb-1 mr-4" /> */}
-                  <span>{newsCat.attributes.name}</span>
+                  <span className={`${subCategory === newsCat.attributes.name ? 'font-bold' : ''}`}>{newsCat.attributes.name}</span>
                 </div>
               </Link>
               
