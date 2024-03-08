@@ -70,8 +70,7 @@ const SideBar = () => {
     const response = await fetch(`${BASE_URL}/category-groups?locale=${localeName}&populate=*&sort=id`);
     const { data } = await response.json();
     setCategoryGroup(data);
-    const urlName = location.pathname.split('/').length === 2 ? decodeURIComponent(location.pathname.split('/')[1]) : '';
-    listHandler(urlName, data, true);
+    listHandler(mainCategory, data, true);
   }
 
   const getNewsCategory = async () => {
@@ -88,10 +87,10 @@ const SideBar = () => {
     });
     if (filterData?.length > 0)
     {
-      filterData[0].attributes.isActive = isInitial ? !!(mainCategory) : true;
       isInitial && !(location.pathname.replace('/', '')) && filterData[0].attributes.isDefault && navigate(filterData[0].attributes.name);
       setNewsCategories(filterData[0]);
       localStorage.setItem('mainCategory', filterData[0].attributes.name);
+      filterData[0].attributes.isActive = !(decodeURIComponent(window.location.pathname).replace('/', '')) ? false : true;
       dispatch(changeCategory({ type: 'CATEGORY', value: ''}));
     } else {
       dispatch(changeCategory({ type: 'CATEGORY', value: '' }));
