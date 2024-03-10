@@ -47,11 +47,11 @@ const VideoContainer = () => {
       nextPageToken = nextPageToken || 0;
       const paginationUrl = `&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
       const stateDistrictPath = `${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}`;
-      let pathUrl = mainCategory ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[category_group][name][$contains][0]=${mainCategory}${decodeURIComponent(category.value) ? `&filters[news_category][name][$contains][0]=${decodeURIComponent(category.value)}` : ''}${stateDistrictPath}${paginationUrl}` 
+      let pathUrl = mainCategory && !chipTag ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[category_group][name][$contains][0]=${mainCategory}${decodeURIComponent(category.value) ? `&filters[news_category][name][$contains][0]=${decodeURIComponent(category.value)}` : ''}${stateDistrictPath}${paginationUrl}` 
       : location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${stateDistrictPath}${paginationUrl}`;
       if (chipTag) {
         pathUrl = `${pathUrl}&filters[featured][$eq][0]=true`;
-        dispatch(updateChipTag(null));
+        // dispatch(updateChipTag(null));
       }
       const response = await fetch(pathUrl);
       let data = await response.json();

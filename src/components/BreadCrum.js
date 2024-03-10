@@ -1,6 +1,6 @@
 import React from "react";
-import { useLocation, Link, useParams } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useLocation, Link, useParams, useNavigate } from 'react-router-dom';
+import { useSelector, } from "react-redux";
 import { BsHouseDownFill } from "react-icons/bs";
 
 const BreadCrum = () => {
@@ -11,6 +11,7 @@ const BreadCrum = () => {
   const localeName = useSelector((store) => store.app.locale);
   const districtName = useSelector((store) => store.app.districtName);
   const talukName = useSelector((store) => store.app.talukName);
+  const navigate = useNavigate();
   let {state= stateName, district=districtName, taluk=talukName, mainCategory='', newsCategory=''} = useParams();
     const pathList = () => {
         const pathItem = decodeURIComponent(location.pathname)?.split('/').filter(item => item && (item !== 'news'));
@@ -30,9 +31,9 @@ const BreadCrum = () => {
                         <ol role="list" className="flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8 py-4">
                             <li>
                                 <div className="flex items-center">
-                                    <Link to="/" className="text-sm hover:text-slate-600 sm:block">
+                                    <a href="/" className="text-sm hover:text-slate-600 sm:block" > 
                                         <BsHouseDownFill className="dark:text-white" size="1.2rem" />
-                                    </Link>
+                                    </a>
                                     <div aria-hidden="true" className="mx-2 select-none sm:block">/</div>
                                 </div>
                             </li>
