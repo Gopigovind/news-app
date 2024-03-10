@@ -127,6 +127,17 @@ const VideoCard = ({ article }) => {
                           className="h-56 
   w-full object-cover rounded-t-lg shadow-sm"
                         />
+                        {
+                          articleCard.mediaCredit  && (
+                            <>
+                            <button
+                              className="image-credit px-2 py-1 cursor-pointer rounded-xl dark:bg-white dark:text-zinc-900"
+                            >
+                              <span className="whitespace-nowrap" title={articleCard.mediaCredit}>{articleCard.mediaCredit}</span>
+                            </button>
+                            </>
+                          )
+                        }
                       </SwiperSlide>
                     ))
                   }
@@ -155,7 +166,7 @@ const VideoCard = ({ article }) => {
             className="text-xs flex space-x-1 pt-3 italic text-gray-400"
           >
             <p>{articleCard.source} - </p>
-            <p>{moment(articleCard.publishedAt).fromNow()}</p>
+            <p title={moment(articleCard.publishedAt).format('LL')}>{moment(articleCard.publishedAt).calendar()}</p>
           </footer>
         </div>
       </div>

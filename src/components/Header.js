@@ -82,7 +82,7 @@ export const RightSideComp = () => {
         </label>
       </div>
 
-      <div className="full cursor-pointer">
+      <div className="full cursor-pointer max-md:hidden">
         {localeData?.length > 0 && <DropDownList dataSource={localeData} isHide={true} value={locale} onChange={changeLocale} clickHandler={clickHandler} />}
       </div>
       <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
@@ -143,7 +143,7 @@ const LeftMenu = () => {
           className="cursor-pointer"
         />
       </button>
-      <div className="logo cursor-pointer flex items-center max-md:hidden">
+      <div className="logo cursor-pointer flex items-center">
         <a href="/" onClick={() => {
           localStorage.removeItem('district');
           localStorage.removeItem('taluk');

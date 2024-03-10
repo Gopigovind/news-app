@@ -51,6 +51,17 @@ const MediaElement = ({ articleCard }) => {
               mx-auto md:max-w-lg lg:max-w-xl 
               object-cover rounded-lg shadow-md"
                 />
+                {
+                          articleCard.mediaCredit  && (
+                            <>
+                            <button
+                              className="image-credit px-2 py-1 cursor-pointer rounded-xl dark:bg-white dark:text-zinc-900"
+                            >
+                              <span className="whitespace-nowrap" title={articleCard.mediaCredit}>{articleCard.mediaCredit}</span>
+                            </button>
+                            </>
+                          )
+                        }
                       </SwiperSlide>
                     ))
                   }

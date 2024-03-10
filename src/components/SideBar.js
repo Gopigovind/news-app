@@ -31,10 +31,12 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BASE_URL } from "./../utils/constants";
-import { toggleMenu } from "../utils/appSlice";
+import { toggleMenu, updateModal } from "../utils/appSlice";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { isMobile as mobileDevice } from "../utils/helper";
 import { changeCategory } from "../utils/categorySlice";
+import { updateLocale } from "../utils/appSlice";
+import DropDownList from "./DropDownList";
 
 const SideBar = () => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
@@ -102,6 +104,7 @@ const SideBar = () => {
   }, [localeName]);
 
   useEffect(() => {
+    localeApiHandler();
     const handleWindowResize = () => {
       if (isMenuOpen && window.innerWidth < breakpoint) {
         dispatch(toggleMenu());
@@ -121,7 +124,24 @@ const SideBar = () => {
     dispatch(changeCategory({ type: 'CATEGORY', value: newsCat.attributes.name}));
     setSubCategory(newsCat.attributes.name);
   }
+  const [localeData, setLocaleData] = useState([]);
+  const [locale, setLocale] = useState(localeName);
+  const localeApiHandler = async () => {
+    const response = await fetch(`${BASE_URL}/i18n/locales`);
+    const data = await response.json();
+    setLocaleData(data);
+  }
 
+  useEffect(() => {
+    setLocale(localeName);
+  }, [localeName]);
+  const changeLocale = (item) => {
+    dispatch(updateLocale(item.code));
+  }
+  const clickHandler = () => {
+    dispatch(toggleMenu());
+    dispatch(updateModal(true));
+  }
 
   return isMenuOpen ? (
     <>
@@ -157,7 +177,7 @@ const SideBar = () => {
               <Link
                 state={{ type: 'CATEGORY', value: newsCat.id, item: newsCat }}
                 to={{
-                  pathname: `${mainCategory ? `/${mainCategory}` : ''}`,
+                  pathname: `${mainCategory ? `/${mainCategory}` : newsCategories?.attributes?.name || ''}`,
                   state: newsCat
                 }}
               >
@@ -166,9 +186,20 @@ const SideBar = () => {
                   <span className={`${subCategory === newsCat.attributes.name ? 'font-bold' : ''}`}>{newsCat.attributes.name}</span>
                 </div>
               </Link>
-              
-
             ))
+          }
+          {
+            isMobile() && (
+              <>
+              <div className="pt-3 border-b border-zinc-200 w-full"></div>
+                {/* <div className="pt-4 pl-4 mb-2">
+                  <span className="text-base font-semibold">{}</span>
+                </div> */}
+              <div className="full cursor-pointer">
+        {localeData?.length > 0 && <DropDownList dataSource={localeData} isHide={true} value={locale} onChange={changeLocale} clickHandler={clickHandler} />}
+      </div>
+              </>
+            )
           }
         </div>
       </div>

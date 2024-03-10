@@ -122,3 +122,15 @@
   min-height: 200px;
 }
 
+.image-credit {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  background: #575654;
+  color: #949593;
+  border: 1px solid #403f3a;
+  text-overflow: ellipsis;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+}
