@@ -11,6 +11,7 @@ const appSlice = createSlice({
     districtName: localStorage.getItem('district') || '',
     talukName: localStorage.getItem('taluk') || '',
     showModal: false,
+    chipTag: '',
   },
   reducers: {
     //action : reducer function(state, actionPayload){}
@@ -35,9 +36,12 @@ const appSlice = createSlice({
     },
     updateModal: (state, action) => {
       state.showModal = action.payload;
+    },
+    updateChipTag: (state, action) => {
+      state.chipTag = action.payload;
     }
   },
 });
 
-export const { toggleMenu, toggleSideBar, updateLocale, updateState, updateDistrict, updateModal, updateTaluk } = appSlice.actions;
+export const { toggleMenu, toggleSideBar, updateChipTag, updateLocale, updateState, updateDistrict, updateModal, updateTaluk } = appSlice.actions;
 export default appSlice.reducer;

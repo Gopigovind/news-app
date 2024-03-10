@@ -12,14 +12,17 @@ import { handleScroll, isMobile } from "../utils/helper";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link, useParams } from 'react-router-dom';
 import { changeCategory } from "../utils/categorySlice";
+import { updateChipTag } from "../utils/appSlice";
 
 const Tags = ({ tagHanler }) => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
   const stateName = useSelector((store) => store.app.stateName);
   const districtName = useSelector((store) => store.app.districtName);
   const talukName = useSelector((store) => store.app.talukName);
-  let { state = stateName, district = districtName, taluk = talukName, mainCategory = '' } = useParams();
+  const chipTag = useSelector((store) => store.app.chipTag);
+  let { state = stateName.replace('/', ''), district = districtName.replace('/', ''), taluk = talukName.replace('/', ''), mainCategory = '' } = useParams();
   mainCategory = mainCategory === state ? '' : mainCategory;
+  const dispatch = useDispatch();
 
 
   state = decodeURIComponent(state);
@@ -33,9 +36,17 @@ const Tags = ({ tagHanler }) => {
   const handleSetHomeVideoByKeyword = (tag) => {
     if (active !== tag) {
       setActive(tag);
+      dispatch(updateChipTag(tag.attributes?.name));
       tagHanler && tagHanler(tag);
     }
   };
+
+  const clickTagHandler = (tag) => {
+    if (active !== tag) {
+      setActive(tag);
+      dispatch(updateChipTag(''));
+    }
+  }
 
   const [tags, setTags] = useState({ path: '', items: [] });
   const districtHandler = async (state) => {
@@ -77,15 +88,28 @@ const Tags = ({ tagHanler }) => {
     }
   }, []);
 
+  const fetchTagsApiData = async () => {
+    const response = await fetch(`${BASE_URL}/category-groups?locale=${localeName}&populate[tags][fields][0]=name&filters[name][$contains][0]=${mainCategory}`);
+    const { data } = await response.json();
+    const itemData = data?.length > 0 && data[0]?.attributes?.tags?.data;
+    if (itemData?.length) {
+      setActive(itemData[0]);
+      dispatch(updateChipTag(itemData[0]?.attributes?.name));
+    }
+    setTags({ path: '', items: itemData });
+  }
 
   useEffect(() => {
-    if (!district) {
-      districtHandler(state);
+    // if (!district) {
+    //   districtHandler(state);
+    // }
+    // if (district && !taluk) {
+    //   talukHandler(district);
+    // }
+    if (localeName) {
+      fetchTagsApiData();
     }
-    if (district && !taluk) {
-      talukHandler(district);
-    }
-  }, [district, taluk, state, localeName]);
+  }, [mainCategory, localeName, taluk, district, state]);
 
   return (
     <>
@@ -112,7 +136,7 @@ const Tags = ({ tagHanler }) => {
                     slidesPerView: 5
                   },
                   1024: {
-                    slidesPerView: 6.5,
+                    slidesPerView: tags?.items?.length > 5 ? 6.5 : 5,
                   },
                 }}
                 className="mySwiper"
@@ -123,10 +147,10 @@ const Tags = ({ tagHanler }) => {
                       <Link
                         replace
                         state={{ type: '', value: tag.id, item: tag }}
-                        to={{
-                          pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}${tags.path}/${tag.attributes.name}`,
-                          state: tag,
-                        }}
+                        // to={{
+                        //   pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}${tags.path}/${tag.attributes.name}`,
+                        //   state: tag,
+                        // }}
                       >
                         <button
                           className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${active === tag
@@ -142,6 +166,26 @@ const Tags = ({ tagHanler }) => {
                     </SwiperSlide>
                   );
                 })}
+                <SwiperSlide>
+                      <Link
+                        replace
+                        state={{ type: '', value: taluk || district || state, item: taluk || district || state }}
+                        to={{
+                          pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}/${state}${district ? `/${district}` : ''}${taluk ? `/${taluk}` : ''}`,
+                          state: {},
+                        }}
+                      >
+                        <button
+                          className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${((active === taluk || district || state) && !chipTag)
+                            ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
+                            : " bg-gray-100  dark:text-white dark:bg-zinc-800"
+                            }`}
+                            onClick={() => clickTagHandler(taluk || district || state)}
+                        >
+                          <span className="whitespace-nowrap">{taluk || district || state}</span>
+                        </button>
+                      </Link>
+                    </SwiperSlide>
               </Swiper>
             </div>
           </div>

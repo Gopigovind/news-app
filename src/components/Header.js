@@ -82,9 +82,9 @@ export const RightSideComp = () => {
         </label>
       </div>
 
-      <div className="full cursor-pointer max-md:hidden">
+      {/* <div className="full cursor-pointer max-md:hidden">
         {localeData?.length > 0 && <DropDownList dataSource={localeData} isHide={true} value={locale} onChange={changeLocale} clickHandler={clickHandler} />}
-      </div>
+      </div> */}
       <div className="p-2 max-sm:hidden  hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full cursor-pointer">
         <IoMdNotificationsOutline size="1.5rem" />
       </div>
@@ -294,7 +294,7 @@ const Header = () => {
             </button>
           </div>
         </div>
-        <div
+        {/* <div
           className="voice-icon max-lg:hidden ml-4 p-2 hover:bg-zinc-200 rounded-full cursor-pointer dark:text-white dark:hover:bg-zinc-700"
           onClick={handleVoiceSearch}
         >
@@ -303,7 +303,7 @@ const Header = () => {
           ) : (
             <MdKeyboardVoice size="1.5rem" />
           )}
-        </div>
+        </div> */}
       </div>
       {!isMobile &&
         <RightSideComp />

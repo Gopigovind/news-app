@@ -55,7 +55,7 @@ const MediaElement = ({ articleCard }) => {
                           articleCard.mediaCredit  && (
                             <>
                             <button
-                              className="image-credit px-2 py-1 cursor-pointer rounded-xl dark:bg-white dark:text-zinc-900"
+                              className="text-xs image-credit px-2 py-1 cursor-pointer rounded-xl dark:bg-white dark:text-zinc-900"
                             >
                               <span className="whitespace-nowrap" title={articleCard.mediaCredit}>{articleCard.mediaCredit}</span>
                             </button>

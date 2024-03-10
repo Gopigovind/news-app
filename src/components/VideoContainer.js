@@ -16,6 +16,7 @@ const VideoContainer = () => {
   const stateName = useSelector((store) => store.app.stateName);
   const localeName = useSelector((store) => store.app.locale);
   const districtName = useSelector((store) => store.app.districtName);
+  const chipTag = useSelector((store) => store.app.chipTag);
   const talukName = useSelector((store) => store.app.talukName);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -48,7 +49,10 @@ const VideoContainer = () => {
       const pathUrl = mainCategory ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[category_group][name][$contains][0]=${mainCategory}${decodeURIComponent(category.value) ? `&filters[news_category][name][$contains][0]=${decodeURIComponent(category.value)}` : ''}${stateDistrictPath}${paginationUrl}` 
       : location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${stateDistrictPath}${paginationUrl}`;
       const response = await fetch(pathUrl);
-      const data = await response.json();
+      let data = await response.json();
+      if (chipTag) {
+        data = data.filter((item) => item.featured);
+      }
       return data;
     } catch (error) {
       console.log(error.message);
@@ -57,9 +61,9 @@ const VideoContainer = () => {
 
   let { data, isLoading, fetchNextPage, isFetchingNextPage, isSuccess } =
     useInfiniteQuery(
-      ["home-videos", mainCategory, localeName, category, state, district, taluk, decodeURIComponent(category.value), decodeURIComponent(location.pathname)],
+      ["home-videos", chipTag, mainCategory, localeName, category, state, district, taluk, decodeURIComponent(category.value), decodeURIComponent(location.pathname)],
       ({ pageParam = null }) =>
-        (category?.type !== "SEARCH" && (state || district || taluk || decodeURIComponent(category.value) || decodeURIComponent(location.pathname) || mainCategory))
+        (category?.type !== "SEARCH" && (chipTag || state || district || taluk || decodeURIComponent(category.value) || decodeURIComponent(location.pathname) || mainCategory))
           ? getVideos(pageParam)
           : searchVideoByKeyword(category, pageParam),
       {

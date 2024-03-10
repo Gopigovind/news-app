@@ -130,7 +130,7 @@
   color: #949593;
   border: 1px solid #403f3a;
   text-overflow: ellipsis;
-    max-width: 120px;
+    max-width: 90px;
     white-space: nowrap;
     overflow: hidden;
 }

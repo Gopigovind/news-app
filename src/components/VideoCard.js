@@ -128,13 +128,13 @@ const VideoCard = ({ article }) => {
   w-full object-cover rounded-t-lg shadow-sm"
                         />
                         {
-                          articleCard.mediaCredit  && (
+                          articleCard.mediaCredit && (
                             <>
-                            <button
-                              className="image-credit px-2 py-1 cursor-pointer rounded-xl dark:bg-white dark:text-zinc-900"
-                            >
-                              <span className="whitespace-nowrap" title={articleCard.mediaCredit}>{articleCard.mediaCredit}</span>
-                            </button>
+                              <button
+                                className="text-xs image-credit px-2 py-1 cursor-pointer rounded-xl dark:bg-white dark:text-zinc-900"
+                              >
+                                <span className="whitespace-nowrap" title={articleCard.mediaCredit}>{articleCard.mediaCredit}</span>
+                              </button>
                             </>
                           )
                         }
@@ -163,10 +163,19 @@ const VideoCard = ({ article }) => {
           </section>
           }
           <footer
-            className="text-xs flex space-x-1 pt-3 italic text-gray-400"
+            className="justify-between text-xs flex space-x-1 pt-3 italic text-gray-400"
           >
-            <p>{articleCard.source} - </p>
-            <p title={moment(articleCard.publishedAt).format('LL')}>{moment(articleCard.publishedAt).calendar()}</p>
+            <a href={articleCard.SourceUrl}>{articleCard.sourceLabel}</a>
+            <p title={moment(articleCard.publishedAt).format('LL')}> - {moment(articleCard.publishedAt).calendar(null, {
+              lastWeek: '[Last] dddd',
+              lastDay: '[Yesterday]',
+              sameDay: '[Today]',
+              nextDay: '[Tomorrow]',
+              nextWeek: 'dddd',
+              sameElse: function () {
+                return "[" + moment(articleCard.publishedAt).format('LL') + "]";
+              }
+            })}</p>
           </footer>
         </div>
       </div>

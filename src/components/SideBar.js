@@ -101,7 +101,7 @@ const SideBar = () => {
 
   useEffect(() => {
     getCategoryGroup();
-  }, [localeName]);
+  }, [localeName, districtName, talukName, stateName]);
 
   useEffect(() => {
     localeApiHandler();
