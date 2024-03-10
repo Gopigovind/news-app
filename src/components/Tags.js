@@ -31,19 +31,22 @@ const Tags = ({ tagHanler }) => {
   mainCategory = decodeURIComponent(mainCategory);
   const localeName = useSelector((store) => store.app.locale);
 
-  const [active, setActive] = useState(district || '');
+  const [active, setActive] = useState(false);
+  const [otherChipActive, setOtherChipActive] = useState(false);
 
   const handleSetHomeVideoByKeyword = (tag) => {
-    if (active !== tag) {
-      setActive(tag);
+    if (!active) {
+      setActive(!active);
+      setOtherChipActive(false);
       dispatch(updateChipTag(tag.attributes?.name));
       tagHanler && tagHanler(tag);
     }
   };
 
   const clickTagHandler = (tag) => {
-    if (active !== tag) {
-      setActive(tag);
+    if (!otherChipActive) {
+      setOtherChipActive(!otherChipActive);
+      setActive(false);
       dispatch(updateChipTag(''));
     }
   }
@@ -93,7 +96,6 @@ const Tags = ({ tagHanler }) => {
     const { data } = await response.json();
     const itemData = data?.length > 0 && data[0]?.attributes?.tags?.data;
     if (itemData?.length) {
-      setActive(itemData[0]);
       dispatch(updateChipTag(itemData[0]?.attributes?.name));
     }
     setTags({ path: '', items: itemData });
@@ -111,12 +113,19 @@ const Tags = ({ tagHanler }) => {
     }
   }, [mainCategory, localeName, taluk, district, state]);
 
+  useEffect(() => {
+    if (tags?.items.length > 0 && !active) {
+      setActive(!active);
+      setOtherChipActive(false);
+    }
+  }, [tags]);
+
   return (
     <>
       {
         !taluk ? (
           <div
-            className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2`}
+            className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2 px-2`}
           >
             <div className="tags-wrapper flex w-full overflow-x-hidden overflow-y-hidden ">
               <Swiper
@@ -124,16 +133,16 @@ const Tags = ({ tagHanler }) => {
                 spaceBetween={20}
                 breakpoints={{
                   320: {
-                    slidesPerView: 2.5
+                    slidesPerView: 1.5
                   },
                   480: {
-                    slidesPerView: 3.5
+                    slidesPerView: 2.5
                   },
                   640: {
-                    slidesPerView: 4
+                    slidesPerView: 3.5
                   },
                   768: {
-                    slidesPerView: 5
+                    slidesPerView: 4.5
                   },
                   1024: {
                     slidesPerView: tags?.items?.length > 5 ? 6.5 : 5,
@@ -153,7 +162,7 @@ const Tags = ({ tagHanler }) => {
                         // }}
                       >
                         <button
-                          className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${active === tag
+                          className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${active
                             ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
                             : " bg-gray-100  dark:text-white dark:bg-zinc-800"
                             }`}
@@ -176,7 +185,7 @@ const Tags = ({ tagHanler }) => {
                         }}
                       >
                         <button
-                          className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${((active === taluk || district || state) && !chipTag)
+                          className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${otherChipActive
                             ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
                             : " bg-gray-100  dark:text-white dark:bg-zinc-800"
                             }`}
