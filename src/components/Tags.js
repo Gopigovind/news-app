@@ -53,18 +53,18 @@ const Tags = ({ tagHanler }) => {
 
   const [tags, setTags] = useState({ path: '', items: [] });
   const districtHandler = async (state) => {
-    const response = await fetch(`${BASE_URL}/districts?locale=${localeName}&fields[0]=name&populate[state][fields][0]=name&filters[state][name][$in][0]=${state}`);
+    const response = await fetch(`${BASE_URL}/districts?locale=${localeName}&populate[state][fields][0]=name&filters[state][name][$in][0]=${state}`);
     const { data } = await response.json();
     setTags({ path: `/${state}`, items: data });
   }
   const talukHandler = async (district) => {
-    const response = await fetch(`${BASE_URL}/taluks?locale=${localeName}&fields[0]=name&populate[state][fields][0]=name&populate[district][fields][0]=name&filters[district][name][$in][0]=${district}`);
+    const response = await fetch(`${BASE_URL}/taluks?locale=${localeName}&populate[state][fields][0]=name&populate[district][fields][0]=name&filters[district][name][$in][0]=${district}`);
     const { data } = await response.json();
     setTags({ path: `/${state}/${district}`, items: data });
   }
 
   const cityHandler = async (taluk) => {
-    const response = await fetch(`${BASE_URL}/localities?locale=${localeName}&fields[0]=name&populate[state][fields][0]=name&populate[district][fields][0]=name&populate[taluk][fields][0]=name&filters[taluk][name][$in][0]=${taluk}`);
+    const response = await fetch(`${BASE_URL}/localities?locale=${localeName}&populate[state][fields][0]=name&populate[district][fields][0]=name&populate[taluk][fields][0]=name&filters[taluk][name][$in][0]=${taluk}`);
     const { data } = await response.json();
     setTags(data);
   }

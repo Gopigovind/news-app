@@ -70,7 +70,7 @@ export default function Modal() {
         localStorage.removeItem('taluk');
     }
     const districtHandler = async () => {
-        const response = await fetch(`${BASE_URL}/districts?locale=${locale}&fields[0]=name&populate[state][fields][0]=name&filters[state][name][$in][0]=${state}`);
+        const response = await fetch(`${BASE_URL}/districts?locale=${locale}&filters[state][name][$in][0]=${state}`);
         const { data } = await response.json();
         setDistrictData(data);
     }
@@ -100,7 +100,7 @@ export default function Modal() {
     }, [open]);
 
     const talukHandler = async () => {
-        const response = await fetch(`${BASE_URL}/taluks?locale=${locale}&fields[0]=name&populate[state][fields][0]=name&populate[district][fields][0]=name&filters[district][name][$in][0]=${district}`);
+        const response = await fetch(`${BASE_URL}/taluks?locale=${locale}&populate[state][fields][0]=name&populate[district][fields][0]=name&filters[district][name][$in][0]=${district}`);
         const { data } = await response.json();
         setTalukData(data);
     };
