@@ -80,7 +80,7 @@ function App() {
         <ThemeContext.Provider value={{ theme, setTheme }}>
           <div className="font-Roboto">
             <Header />
-            {!isMobile && <BreadCrum />}
+            {/* {!isMobile && <BreadCrum />} */}
             <Outlet />
           </div>
           {/* <ReactQueryDevtools initialIsOpen /> */}

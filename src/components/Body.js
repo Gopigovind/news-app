@@ -7,7 +7,7 @@ const Body = () => {
   return (
     <div className={`${isMobile ? '' : 'flex'} bg-white dark:bg-zinc-800 transition-all duration-500 `}>
       <SideBar />
-      {isMobile && <BreadCrum />}
+      {/* {isMobile && <BreadCrum />} */}
       <Outlet />
     </div>
   );

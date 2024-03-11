@@ -35,7 +35,7 @@ import { toggleMenu, updateModal } from "../utils/appSlice";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { isMobile as mobileDevice } from "../utils/helper";
 import { changeCategory } from "../utils/categorySlice";
-import { updateLocale } from "../utils/appSlice";
+import { updateLocale, updateChipTag } from "../utils/appSlice";
 import DropDownList from "./DropDownList";
 
 const SideBar = () => {
@@ -83,6 +83,7 @@ const SideBar = () => {
 
   const listHandler = (categoryName, data=null, isInitial = false) => {
     const itemData = data || categoryGroup;
+    // dispatch(updateChipTag(''));
     const filterData = itemData.filter((item) => {
       item.attributes.isActive = false;
       return categoryName ? item.attributes.name === categoryName : item
@@ -122,6 +123,7 @@ const SideBar = () => {
   const categoryHandler = (newsCat) => {
     // dispatch(changeCategory({ type: 'CATEGORY', value: newsCat.id }));
     dispatch(changeCategory({ type: 'CATEGORY', value: newsCat.attributes.name}));
+    dispatch(updateChipTag(''));
     setSubCategory(newsCat.attributes.name);
   }
   const [localeData, setLocaleData] = useState([]);

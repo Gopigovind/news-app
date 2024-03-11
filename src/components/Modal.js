@@ -23,7 +23,7 @@ export default function Modal() {
     const [locale, setLocale] = useState(localeName);
     const [state, setState] = useState(stateName);
     const [districtData, setDistrictData] = useState([]);
-    const [district, setDistrict] = useState(districtName);
+    const [district, setDistrict] = useState('');
     const [taluk, setTaluk] = useState(talukName);
     const [talukData, setTalukData] = useState([]);
 
@@ -72,6 +72,7 @@ export default function Modal() {
     const districtHandler = async () => {
         const response = await fetch(`${BASE_URL}/districts?locale=${locale}&filters[state][name][$in][0]=${state}`);
         const { data } = await response.json();
+        setDistrict(districtName);
         setDistrictData(data);
     }
 

@@ -114,92 +114,95 @@ const Tags = ({ tagHanler }) => {
   }, [mainCategory, localeName, taluk, district, state]);
 
   useEffect(() => {
-    if (tags?.items.length > 0 && !active) {
-      setActive(!active);
+    if (tags?.items.length > 0) {
       setOtherChipActive(false);
     }
   }, [tags]);
 
+  useEffect(() => {
+    setActive(true);
+  }, []);
+
+  useEffect(() => {
+    setActive(chipTag ? true : false);
+  }, [chipTag]);
+
   return (
     <>
-      {
-        !taluk ? (
-          <div
-            className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2 px-2`}
+      <div
+        className={`tags ${!isMobile ? 'mx-4' : ''} flex text-sm items-center pt-2 px-2`}
+      >
+        <div className="tags-wrapper flex w-full overflow-x-hidden overflow-y-hidden ">
+          <Swiper
+            navigation={!isMobile} modules={[Navigation]}
+            spaceBetween={20}
+            breakpoints={{
+              320: {
+                slidesPerView: 1.5
+              },
+              480: {
+                slidesPerView: 2.5
+              },
+              640: {
+                slidesPerView: 3.5
+              },
+              768: {
+                slidesPerView: 4.5
+              },
+              1024: {
+                slidesPerView: tags?.items?.length > 5 ? 6.5 : 5,
+              },
+            }}
+            className="mySwiper"
           >
-            <div className="tags-wrapper flex w-full overflow-x-hidden overflow-y-hidden ">
-              <Swiper
-                navigation={!isMobile} modules={[Navigation]}
-                spaceBetween={20}
-                breakpoints={{
-                  320: {
-                    slidesPerView: 1.5
-                  },
-                  480: {
-                    slidesPerView: 2.5
-                  },
-                  640: {
-                    slidesPerView: 3.5
-                  },
-                  768: {
-                    slidesPerView: 4.5
-                  },
-                  1024: {
-                    slidesPerView: tags?.items?.length > 5 ? 6.5 : 5,
-                  },
-                }}
-                className="mySwiper"
-              >
-                {tags?.items?.map((tag, index) => {
-                  return (
-                    <SwiperSlide>
-                      <Link
-                        replace
-                        state={{ type: '', value: tag.id, item: tag }}
-                        // to={{
-                        //   pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}${tags.path}/${tag.attributes.name}`,
-                        //   state: tag,
-                        // }}
-                      >
-                        <button
-                          className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${active
-                            ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
-                            : " bg-gray-100  dark:text-white dark:bg-zinc-800"
-                            }`}
-                          key={index}
-                          onClick={() => handleSetHomeVideoByKeyword(tag)}
-                        >
-                          <span className="whitespace-nowrap">{tag.attributes.name}</span>
-                        </button>
-                      </Link>
-                    </SwiperSlide>
-                  );
-                })}
+            {tags?.items?.map((tag, index) => {
+              return (
                 <SwiperSlide>
-                      <Link
-                        replace
-                        state={{ type: '', value: taluk || district || state, item: taluk || district || state }}
-                        to={{
-                          pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}/${state}${district ? `/${district}` : ''}${taluk ? `/${taluk}` : ''}`,
-                          state: {},
-                        }}
-                      >
-                        <button
-                          className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${otherChipActive
-                            ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
-                            : " bg-gray-100  dark:text-white dark:bg-zinc-800"
-                            }`}
-                            onClick={() => clickTagHandler(taluk || district || state)}
-                        >
-                          <span className="whitespace-nowrap">{taluk || district || state}</span>
-                        </button>
-                      </Link>
-                    </SwiperSlide>
-              </Swiper>
-            </div>
-          </div>
-        ) : null
-      }
+                  <Link
+                    replace
+                    state={{ type: '', value: tag.id, item: tag }}
+                  // to={{
+                  //   pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}${tags.path}/${tag.attributes.name}`,
+                  //   state: tag,
+                  // }}
+                  >
+                    <button
+                      className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${active
+                        ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
+                        : " bg-gray-100  dark:text-white dark:bg-zinc-800"
+                        }`}
+                      key={index}
+                      onClick={() => handleSetHomeVideoByKeyword(tag)}
+                    >
+                      <span className="whitespace-nowrap">{tag.attributes.name}</span>
+                    </button>
+                  </Link>
+                </SwiperSlide>
+              );
+            })}
+            <SwiperSlide>
+              <Link
+                replace
+                state={{ type: '', value: taluk || district || state, item: taluk || district || state }}
+                to={{
+                  pathname: `${mainCategory ? `/${mainCategory}` : (localStorage.getItem('mainCategory') || '')}/${state}${district ? `/${district}` : ''}${taluk ? `/${taluk}` : ''}`,
+                  state: {},
+                }}
+              >
+                <button
+                  className={`tag px-2 w-full py-2 cursor-pointer rounded-lg ${otherChipActive
+                    ? "bg-slate-900 text-white dark:bg-white dark:text-zinc-900"
+                    : " bg-gray-100  dark:text-white dark:bg-zinc-800"
+                    }`}
+                  onClick={() => clickTagHandler(taluk || district || state)}
+                >
+                  <span className="whitespace-nowrap">{taluk || district || state}</span>
+                </button>
+              </Link>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </div>
     </>
   );
 };

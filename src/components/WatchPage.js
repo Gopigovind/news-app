@@ -137,7 +137,8 @@ const WatchPage = () => {
 
   return (isLoading || !articleCard) ? null : (
     <>
-    {isMobile && <><SideBar /><BreadCrum /></>}
+    {/* {isMobile && <><SideBar /><BreadCrum /></>} */}
+    {isMobile && <><SideBar /></>}
     <Modal />
   <div className="max-w-6xl mx-auto">
   <article>

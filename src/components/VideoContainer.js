@@ -50,12 +50,14 @@ const VideoContainer = () => {
       let pathUrl = mainCategory && !chipTag ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[category_group][name][$contains][0]=${mainCategory}${decodeURIComponent(category.value) ? `&filters[news_category][name][$contains][0]=${decodeURIComponent(category.value)}` : ''}${stateDistrictPath}${paginationUrl}` 
       : location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${stateDistrictPath}${paginationUrl}`;
       if (chipTag) {
-        pathUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*&filters[category_group][name][$contains][0]=${mainCategory}&filters[featured][$eq][0]=true`;
+        let baseUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*&filters[category_group][name][$contains][0]=${mainCategory}&filters[featured][$eq][0]=true${paginationUrl}`;
+        pathUrl = baseUrl;
         if (district) {
           pathUrl = `${pathUrl}&filters[state][name][$eq]=${state}&filters[$or][0][district][name][$contains]=${district}&filters[$or][1][district]`
         }
-        // pathUrl = `${pathUrl}&filters[featured][$eq][0]=true`;
-        // dispatch(updateChipTag(null));
+        if (taluk) {
+          pathUrl = `${baseUrl}&filters[state][name][$eq]=${state}&filters[district][name][$eq]=${district}&filters[$or][0][taluk][name][$contains]=${taluk}&filters[$or][1][taluk]`;
+        }
       }
       const response = await fetch(pathUrl);
       let data = await response.json();
