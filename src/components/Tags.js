@@ -20,6 +20,7 @@ const Tags = ({ tagHanler }) => {
   const districtName = useSelector((store) => store.app.districtName);
   const talukName = useSelector((store) => store.app.talukName);
   const chipTag = useSelector((store) => store.app.chipTag);
+  const category = useSelector((store) => store.newsCategory.category);
   let { state = stateName.replace('/', ''), district = districtName.replace('/', ''), taluk = talukName.replace('/', ''), mainCategory = '' } = useParams();
   mainCategory = mainCategory === state ? '' : mainCategory;
   const dispatch = useDispatch();
@@ -35,6 +36,7 @@ const Tags = ({ tagHanler }) => {
   const [otherChipActive, setOtherChipActive] = useState(false);
 
   const handleSetHomeVideoByKeyword = (tag) => {
+    dispatch(changeCategory({ type: 'CATEGORY', value: ''}));
     if (!active) {
       setActive(!active);
       setOtherChipActive(false);
@@ -44,6 +46,7 @@ const Tags = ({ tagHanler }) => {
   };
 
   const clickTagHandler = (tag) => {
+    dispatch(changeCategory({ type: 'CATEGORY', value: ''}));
     if (!otherChipActive) {
       setOtherChipActive(!otherChipActive);
       setActive(false);
@@ -124,7 +127,7 @@ const Tags = ({ tagHanler }) => {
   }, []);
 
   useEffect(() => {
-    setActive(chipTag ? true : false);
+    setActive(chipTag && !category?.value ? true : false);
   }, [chipTag]);
 
   return (

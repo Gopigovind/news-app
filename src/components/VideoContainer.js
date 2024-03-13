@@ -46,17 +46,18 @@ const VideoContainer = () => {
     try {
       nextPageToken = nextPageToken || 0;
       const paginationUrl = `&pagination[start]=${nextPageToken}&pagination[limit]=${nextPageToken + 8}`;
-      const stateDistrictPath = `${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&filters[taluk][name][$contains][0]=${taluk}` : ''}`;
-      let pathUrl = mainCategory && !chipTag ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&filters[category_group][name][$contains][0]=${mainCategory}${decodeURIComponent(category.value) ? `&filters[news_category][name][$contains][0]=${decodeURIComponent(category.value)}` : ''}${stateDistrictPath}${paginationUrl}` 
-      : location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${stateDistrictPath}${paginationUrl}`;
-      if (chipTag) {
-        let baseUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*&filters[category_group][name][$contains][0]=${mainCategory}&filters[featured][$eq][0]=true${paginationUrl}`;
-        pathUrl = baseUrl;
+      const stateDistrictPath = `${state ? `&filters[state][name][$contains][0]=${state}` : ''}${district ? `&filters[district][name][$contains][0]=${district}` : ''}${taluk ? `&sort=[taluk][name]=${taluk}` : ''}`;
+      const mainCategoryPath = mainCategory ? `&filters[category_group][name][$contains][0]=${mainCategory}` : '';
+      let pathUrl = '';
+      if (!!mainCategory && !chipTag && (category.value || !state)) {
+        pathUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${mainCategoryPath}${category.value ? `&filters[news_category][name][$contains][0]=${category.value}` : ''}${paginationUrl}`;
+      } else {
+        pathUrl = location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${mainCategoryPath}${stateDistrictPath}${paginationUrl}`;  
+      }
+      if (chipTag && !category?.value) {
+        pathUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*${mainCategoryPath}&filters[featured][$eq][0]=true${paginationUrl}`;
         if (district) {
           pathUrl = `${pathUrl}&filters[state][name][$eq]=${state}&filters[$or][0][district][name][$contains]=${district}&filters[$or][1][district]`
-        }
-        if (taluk) {
-          pathUrl = `${baseUrl}&filters[state][name][$eq]=${state}&filters[district][name][$eq]=${district}&filters[$or][0][taluk][name][$contains]=${taluk}&filters[$or][1][taluk]`;
         }
       }
       const response = await fetch(pathUrl);
