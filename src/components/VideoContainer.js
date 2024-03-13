@@ -55,7 +55,7 @@ const VideoContainer = () => {
         pathUrl = location.pathname === '' ? `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc&${paginationUrl}` : `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${mainCategoryPath}${stateDistrictPath}${paginationUrl}`;  
       }
       if (chipTag && !category?.value) {
-        pathUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*${mainCategoryPath}&filters[featured][$eq][0]=true${paginationUrl}`;
+        pathUrl = `${BASE_URL}/headlines?locale=${localeName}&populate=*&sort=publishedAt:desc${mainCategoryPath}&filters[featured][$eq][0]=true${paginationUrl}`;
         if (district) {
           pathUrl = `${pathUrl}&filters[state][name][$eq]=${state}&filters[$or][0][district][name][$contains]=${district}&filters[$or][1][district]`
         }
